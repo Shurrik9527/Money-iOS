@@ -1,0 +1,45 @@
+//
+//  Canary.pch
+//  Canary
+//
+//  Created by litong on 2017/5/4.
+//  Copyright © 2017年 litong. All rights reserved.
+//
+
+#ifndef Canary_pch
+#define Canary_pch
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "AppDelegate.h"
+#import "Masonry.h"
+#import "SBJson.h"
+#import "Macro_String.h"
+#import "Marco_UMeng.h"
+#import "Macro_Constant.h"
+#import "Marco_SizeAndColor.h"
+#import "Macro_Defines.h"
+#import "Marco_RequestHeader.h"
+#import "NetworkRequests.h"
+#import "LTCategory.h"
+#import "LTAlertView.h"
+
+
+#import "LTUser.h"
+#import "LTUtils.h"
+#import "PublicData.h"
+#import "BaseVCtrl.h"
+#import "UIViewController+Base.h"
+#import "BaseMO.h"
+
+#import "RequestCenter.h"
+#import "WebVCtrl.h"
+
+#import "DeviceInfo.h"
+#import "MJExtension.h"
+#define BasisUrl        @"http://app.moyacs.com"
+#define BaseUrl         @"http://47.97.186.123/royal"
+#define SOCKETHOST @"quotation.moamarkets.com"
+#define SOCKETPORT  1234
+#endif /* Canary_pch */
+
