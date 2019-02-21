@@ -32,6 +32,7 @@
     [btn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     return btn;
 }
+
 -(UILabel *)createLabWithFrame:(CGRect)frame text:(NSString *)text fontsize:(CGFloat)fsize{
     UILabel *label=[[UILabel alloc]init];
     label.frame=frame;
@@ -64,7 +65,7 @@
     return timeString;
     
 }
-+(NSString *)convertime:(NSString *)timeStr
++ (NSString *)convertime:(NSString *)timeStr
 {
     long long time=[timeStr longLongValue];
     NSDate *d = [[NSDate alloc]initWithTimeIntervalSince1970:time/1000.0];
@@ -79,7 +80,7 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSDate *date=[dateFormatter dateFromString:time];
-    return [date timeIntervalSince1970]*1000;
+    return [date timeIntervalSince1970] * 1000;
 }
 
 +(CGSize)sizeWithText:(NSString *)text font:(UIFont *)font maxSize:(CGSize)maxSize

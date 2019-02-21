@@ -60,29 +60,34 @@
 //k线接口返回数据   根据type格式化时间
 + (NSMutableArray *)objsWithList:(NSArray *)list type:(NSString *)type {
     NSMutableArray *ms = [NSMutableArray new];
-    NSDateFormatter *dateFomatter = [[NSDateFormatter alloc]init];
+//    NSDateFormatter *dateFomatter = [[NSDateFormatter alloc]init];
     //获取当前时间的年
-    [dateFomatter setDateFormat:@"YYYY"];
-    NSString *yyyy = [dateFomatter stringFromDate:[NSDate date]];
+//    [dateFomatter setDateFormat:@"YYYY"];
+//    NSString *yyyy = [dateFomatter stringFromDate:[NSDate date]];
     //时间格式 ：年-月-日 时:分:秒
-    [dateFomatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+//    [dateFomatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
     for (NSDictionary *item in list) {
-        NSString *time = [item objectForKey:@"t"];
-        if([type isEqual:@"6"] || [type isEqual:@"7"] || [type isEqual:@"8"]) {
-            //6、7、8         t: "2015-07-14"  需要在后面添加时分秒（00:00:00）
-            time = [NSString stringWithFormat:@"%@ 00:00:00",time];
-        } else {
-            //t: "07-01 04:00",  需要在前面补年（yyyy）后面补秒（:00）
-            time = [NSString stringWithFormat:@"%@-%@:00",yyyy,time];
-        }
-        NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[[dateFomatter dateFromString:time] timeIntervalSince1970]];
+//        NSInteger timeNumber = [[item objectForKey:@"time"] integerValue];
+        NSString *timeSp = [NSString stringWithFormat:@"%ld",[[item objectForKey:@"time"] integerValue] / 1000];
+//        NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:timeNumber];
+//        NSString *time = [dateFomatter stringFromDate:currentDate];
+//        if([type isEqual:@"6"] || [type isEqual:@"7"] || [type isEqual:@"8"]) {
+//            //6、7、8         t: "2015-07-14"  需要在后面添加时分秒（00:00:00）
+//            time = [NSString stringWithFormat:@"%@ 00:00:00",time];
+//        } else {
+//            //t: "07-01 04:00",  需要在前面补年（yyyy）后面补秒（:00）
+//            time = [NSString stringWithFormat:@"%@-%@:00",yyyy,time];
+//        }
+        
+//        NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[[dateFomatter dateFromString:time] timeIntervalSince1970]];
+        
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
                                     timeSp,@"time",
-                                    [item objectForKey:@"c"],@"closePrice",
-                                    [item objectForKey:@"v"],@"volume",
-                                    [item objectForKey:@"h"],@"heightPrice",
-                                    [item objectForKey:@"l"],@"lowPrice",
-                                    [item objectForKey:@"o"],@"openPrice",
+                                    [item objectForKey:@"close"],@"closePrice",
+                                    [item objectForKey:@"volume"],@"volume",
+                                    [item objectForKey:@"high"],@"heightPrice",
+                                    [item objectForKey:@"low"],@"lowPrice",
+                                    [item objectForKey:@"open"],@"openPrice",
                                     nil];
 
         [ms addObject:dic];

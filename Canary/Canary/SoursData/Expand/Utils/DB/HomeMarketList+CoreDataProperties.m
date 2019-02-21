@@ -129,7 +129,7 @@
         NSLog(@"symbol========%@",model.symbol);;
         return;
     }
-    NSLog(@"symbol1111========%@",model.symbol);;
+//    NSLog(@"symbol1111========%@",model.symbol);;
 
     //添加查询条件
     request.predicate=[NSPredicate predicateWithFormat:@"symbol=%@",model.symbol];

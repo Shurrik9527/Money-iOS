@@ -430,13 +430,38 @@
         ws.imgUpdating = NO;
         if(res.success) {
             NSString *imgUrl = [res.rawDict stringFoKey:@"data"];
-            UD_SetAvatar(imgUrl);
-            [[NSNotificationCenter defaultCenter] postNotificationName:NFC_ChangeHeadImgSuccess object:nil];
-            [LTAlertView alertMessage:@"恭喜您的头像修改成功"];
+            [self networkUserEdit:imgUrl];
         } else {
 //            [LTAlertView alertMessage:@"您的头像修改失败，请重新修改"];
             [ws.view showTip:res.message];
         }
+    }];
+    
+}
+
+- (void)networkUserEdit:(NSString *)userImg{
+    
+    NSMutableDictionary *dic = [@{
+                                  @"userImg":userImg
+                                  } mutableCopy];
+    
+    NSString *url = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/user/edit"];
+    
+    [[NetworkRequests sharedInstance] SWDPOST:url dict:dic succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
+        NSLog(@"res == %@",resonseObj);
+
+        if (isSuccess){
+            UD_SetAvatar(userImg);
+            [[NSNotificationCenter defaultCenter] postNotificationName:NFC_ChangeHeadImgSuccess object:nil];
+            [LTAlertView alertMessage:@"恭喜您的头像修改成功"];
+        }else{
+            NSLog(@"error === %@",message);
+        }
+        
+    } failure:^(NSError *error) {
+        NSLog(@"error === %@",error);
+        
+        
     }];
     
 }

@@ -14,7 +14,7 @@ typedef void (^ReturnValueBlock) (NSMutableArray *socketArray);
 
 - (void)startConnectSocket;//开始连接
 - (void)cutOffSocket ;//断开连接
-+(AsSocket *)shareDataAsSocket;
++ (AsSocket *)shareDataAsSocket;
 @property(nonatomic, copy) ReturnValueBlock returnValueBlock;
 
 @end

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MarketModel.h"
 #import "SocketModel.h"
+#import "BuySellingModel.h"
 #define QuotationBtnH    100.f
 
 /** 单个产品行情 */
@@ -16,9 +17,9 @@
 @property (nonatomic,strong) UILabel *nameLab;//哈贵油
 @property (nonatomic,strong) UILabel *priceLab;//2464.7
 @property (nonatomic,strong) UILabel *changeLab;//-10.7  -0.41%
-- (void)refData:(MarketModel *)q;
+- (void)refData:(BuySellingModel *)q;
 
--(void)socketmodel:(SocketModel*)m;
+-(void)socketmodel:(BuySellingModel *)m;
 + (CGFloat)viewH;
 
 + (CGFloat)viewW;

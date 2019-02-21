@@ -32,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL trading;
 @property (nonatomic) BOOL visible;
 
+
+
+
 // 增加
 +(BOOL)AddData:(MarketModel *)model;
 // 删除

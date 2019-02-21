@@ -16,7 +16,9 @@ PODS:
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
+  - SocketRocket (0.5.1)
   - Toast (2.4)
+  - XLForm (3.3.0)
 
 DEPENDENCIES:
   - FTCoreText (= 1.0.1)
@@ -26,7 +28,9 @@ DEPENDENCIES:
   - NIMSDK
   - PLPlayerKit (~> 2.2.2)
   - SDWebImage (= 3.7.3)
+  - SocketRocket
   - Toast (~> 2.4)
+  - XLForm
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -39,7 +43,9 @@ SPEC REPOS:
     - pili-librtmp
     - PLPlayerKit
     - SDWebImage
+    - SocketRocket
     - Toast
+    - XLForm
 
 SPEC CHECKSUMS:
   FTCoreText: 7bc3eb236f5eee4bcd33486d693376c04b08a3d4
@@ -51,8 +57,10 @@ SPEC CHECKSUMS:
   pili-librtmp: bc768bc3971edad732fd5e66f0ee991fa1a0a257
   PLPlayerKit: 30e419fa90e84df34922e6dd5d5833d7e4348bf4
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   Toast: 0773b8fc0e97352ca6054517bec7ebdd4110029d
+  XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
 
-PODFILE CHECKSUM: ac9bd5190c0009e125dadddccce1a3ef6d847300
+PODFILE CHECKSUM: cc8452663d27cce8cddf446074ac69acc06895e1
 
 COCOAPODS: 1.5.3

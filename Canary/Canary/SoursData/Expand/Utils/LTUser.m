@@ -9,6 +9,8 @@
 #import "LTUser.h"
 #import "LTSocketConfig.h"
 #import "GTMBase64.h"
+#import "JWTHundel.h"
+
 #define kUserId @"userId"
 #define UD_SetUserId(str)       [LTUser setUserId:str]
 
@@ -59,7 +61,9 @@
     [UserDefaults removeObjectForKey:INFOSTEP];
     [UserDefaults removeObjectForKey:MT4ID];
     [UserDefaults removeObjectForKey:TYPE];
-
+    [UserDefaults removeObjectForKey:@"loginName"];
+    [UserDefaults removeObjectForKey:@"password"];
+    [[JWTHundel shareHundle] removeTimer];
     [LTUser delToken];
     
     //清除小视频飘窗地址

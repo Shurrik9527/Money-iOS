@@ -70,19 +70,19 @@
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:parameters];
     NSString *reqUrl = [url urlFormat];
     
-    if (encryptType == LTEncryptType_Auth) {
-        if (!isPost) {
-            [dic setObject:@(kAPPType) forKey:@"sourceId"];
-        }
-        NSMutableDictionary *dict = [LTRequest addAuth:dic];
-        dic = nil;
-        dic = [NSMutableDictionary dictionaryWithDictionary:dict];
-    }else if (encryptType==LTEncryptType_Other){
+//    if (encryptType == LTEncryptType_Auth) {
+//        if (!isPost) {
+//            [dic setObject:@(kAPPType) forKey:@"sourceId"];
+//        }
+//        NSMutableDictionary *dict = [LTRequest addAuth:dic];
+//        dic = nil;
+//        dic = [NSMutableDictionary dictionaryWithDictionary:dict];
+//    }else if (encryptType==LTEncryptType_Other){
 //        dic = [NSMutableDictionary dictionaryWithDictionary:@{}];
         
-    }else {
-        [dic setObject:@(kDeviceType) forKey:@"deviceType"];;
-    }
+//    }else {
+//        [dic setObject:@(kDeviceType) forKey:@"deviceType"];;
+//    }
 
     
 #ifdef DEBUG
@@ -99,11 +99,15 @@
     if(cookie) {
         [manager.requestSerializer setValue:cookie forHTTPHeaderField:@"Cookie"];
     }
+    NSString * ktoken = [NSUserDefaults objFoKey:kToken];
+    if (ktoken) {
+        [manager.requestSerializer setValue:[NSString stringWithFormat:@"%@",ktoken] forHTTPHeaderField:@"Authorization"];
+    }
     
     if (isPost) {
         [manager POST:reqUrl parameters:dic constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
             if (notemptyStr(imagePath)) {
-                [formData appendPartWithFileURL:[NSURL fileURLWithPath:imagePath] name:@"file" error:nil];
+                [formData appendPartWithFileURL:[NSURL fileURLWithPath:imagePath] name:@"files" error:nil];
             }
         } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             LTResponse *result = [LTResponse responseWithDict:responseObject];
@@ -172,9 +176,9 @@
 
 + (void)log:(NSDictionary *)dic url:(NSString *)url {
     
-    NSLog(@"url = %@\n",url);
+//    NSLog(@"url = %@\n",url);
 //
-    NSLog(@"dic = %@\n",dic);
+//    NSLog(@"dic = %@\n",dic);
     
 //    NSLog(@"url = %@\n",[url urlStringAddParmDict:dic]);
     

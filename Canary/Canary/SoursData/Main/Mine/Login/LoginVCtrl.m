@@ -17,6 +17,7 @@
 #import "NameField.h"
 #import "AttachmentsModel.h"
 #import "GTMBase64.h"
+#import "JWTHundel.h"
 
 #define kHeaderH 228
 #define kTabH 48
@@ -263,18 +264,24 @@
         NSString * urlString = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/login/passwordLogin"];
         NSDictionary * dic = @{@"loginName":phoneStr,@"password":pwdStr};
         NSLog(@"dic === %@",dic);
+        [self showLoadingView];
         [[NetworkRequests sharedInstance] LoginPOST:urlString dict:dic succeed:^(id data) {
             NSLog(@"data === %@",data);
             if ([[data objectForKey:@"msgCode"] integerValue] == 0 ) {
-                
+                [NSUserDefaults setObj:phoneStr foKey:@"loginName"];
+                [NSUserDefaults setObj:pwdStr foKey:@"password"];
+                [[JWTHundel shareHundle] createTimer];
                 [self getUserMessage];
                 
             }else
             {
+                [self hideLoadingView];
+
                 [LTAlertView alertMessage:[DataHundel messageObjetCode:[[data objectForKey:@"msgCode"]integerValue]]];
             }
         } failure:^(NSError *error) {
-            
+            [self hideLoadingView];
+
         }];
     }
 }
@@ -285,7 +292,6 @@
 #pragma mark - 获取用户信息
 -(void)getUserMessage
 {
-    NSLog(@"登录成功 = %@",[[NSUserDefaults standardUserDefaults] objectForKey:kToken]);
     
     WS(ws);
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/user/getUser"];
@@ -294,6 +300,12 @@
         NSLog(@"res === %@",resonseObj);
         if (isSuccess) {
             
+            [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+            
+            NSString * nickName = resonseObj[@"userName"];
+            [NSUserDefaults setObj:nickName foKey:kNickName];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NFC_LocLogin  object:nil];
+            [ws popVC];
             
 //            NSArray * array = [resonseObj objectForKey:@"attachments"];
 //            NSArray * photoIDArray = [AttachmentsModel mj_objectArrayWithKeyValuesArray:array];
@@ -303,10 +315,9 @@
 //                }
 //            }
 //            NSString * infoFillStep = [resonseObj objectForKey:@"infoFillStep"];
-//            NSString * nickName = [resonseObj objectForKey:@"fullname"];
+
 //            NSString * mobelNum = [resonseObj objectForKey:@"mobile"];
 //            [NSUserDefaults setObj:infoFillStep foKey:INFOSTEP];
-//            [NSUserDefaults setObj:nickName foKey:kNickName];
 //            [NSUserDefaults setObj:mobelNum foKey:kMobile];
 //            array = [resonseObj objectForKey:@"mt4Users"];
 //            NSMutableArray * userArray  =[UserModel mj_objectArrayWithKeyValuesArray:array];
@@ -320,17 +331,19 @@
 //                [NSUserDefaults setObj:mt4id foKey:MT4ID];
 //                [NSUserDefaults setObj:type foKey:TYPE];
 //                [[NSNotificationCenter defaultCenter] postNotificationName:NFC_LocLogin  object:nil];
-                [ws popVC];
+//                [ws popVC];
 //            }];
 //            [self.view addSubview:self.popView];
 //            [self.popView showView:YES];
             
-            
+            [self hideLoadingView];
+
         }
         
     } failure:^(NSError *error) {
         
-        
+        [self hideLoadingView];
+
     }];
     
 //    [[NetworkRequests sharedInstance] POST:stringUrl dict:nil succeed:^(id data) {

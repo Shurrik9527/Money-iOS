@@ -76,10 +76,10 @@
     _viewTyp = viewTyp;
 
   //  if (_viewTyp == KChatLineFootViewType_Buy) {//买涨、买跌
-        self.tits = [NSArray arrayWithObjects:@"买涨",@"买跌", nil];
+//        self.tits = [NSArray arrayWithObjects:@"买涨",@"买跌", nil];
  //   }
 //    else if (_viewTyp == KChatLineFootViewType_BuyAndClose) {//买涨、买跌、平仓
-//        self.tits = [NSArray arrayWithObjects:@"买涨",@"买跌",@"暂无持仓", nil];
+        self.tits = [NSArray arrayWithObjects:@"挂单",@"买涨",@"买跌",@"持仓", nil];
 //    }
 //    else {//前往交易大厅
 //        self.tits = [NSArray arrayWithObjects:@"前往交易大厅", nil];
@@ -92,11 +92,14 @@
     } else if (titCount == 3) {
         leftMargin = 8.5;
         midMargin = 8;
+    } else if (titCount == 4) {
+        leftMargin = 8.5;
+        midMargin = 8;
     } else {
         leftMargin = 40;
         midMargin = 0;
     }
-    btnW = (ScreenW_Lit - 2*leftMargin - (titCount - 1)*midMargin)/titCount;
+    btnW = (ScreenW_Lit - 2 * leftMargin - (titCount - 1)*midMargin)/titCount;
     
     [self createView];
 }
@@ -134,11 +137,17 @@
         btn.layer.borderWidth = 0.5;
         btn.layer.borderColor = LTSubTitleColor.CGColor;
     }
-    else if ([btnTitle isEqualToString:@"查看持仓"]) {
+    else if ([btnTitle isEqualToString:@"持仓"]) {
         btn.backgroundColor = LTTitleColor;
         [btn setTitleColor:LTSubTitleColor forState:UIControlStateNormal];
-        btn.layer.borderWidth = 0.5;
+        btn.layer.borderWidth = 1;
         btn.layer.borderColor = LTSubTitleColor.CGColor;
+    }
+    else if ([btnTitle isEqualToString:@"挂单"]) {
+        btn.backgroundColor = LTSureFontBlue;
+        [btn setTitleColor:LTWhiteColor forState:UIControlStateNormal];
+//        btn.layer.borderWidth = 0.5;
+//        btn.layer.borderColor = LTSubTitleColor.CGColor;
     }
 }
 

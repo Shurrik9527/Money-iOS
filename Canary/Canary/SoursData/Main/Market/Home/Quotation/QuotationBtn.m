@@ -16,7 +16,8 @@
     CGFloat oldPrice;
 }
 
-@property (nonatomic,strong)SocketModel *quotation;
+@property (nonatomic,strong)BuySellingModel *quotation;
+@property (nonatomic,strong)NSString *name;
 
 @end
 
@@ -49,12 +50,12 @@
     
 }
 #pragma mark - socketModle
--(void)socketmodel:(SocketModel*)m
+-(void)socketmodel:(BuySellingModel *)m
 {
     
-    _priceLab.text = [m buy_out];
-    CGFloat price = [[m buy_out] doubleValue];
-    oldPrice = [m.closePrice floatValue];
+    _priceLab.text = [m price];
+    CGFloat price = [[m price] doubleValue];
+    oldPrice = [m.close floatValue];
     CGFloat changeValue =price - oldPrice;
     float  gains =changeValue/price * 100;
     NSString *change = [NSString stringWithFormat:@"%@%%",[NSString stringWithFormat:@"%.3f",gains]];
@@ -79,8 +80,36 @@
     
 }
 #pragma mark - 外部
-- (void)refData:(MarketModel *)q {
-    _nameLab.text =  [q symbol_cn];
+- (void)refData:(BuySellingModel *)q {
+    _nameLab.text =  [q symbolName];
+    
+    
+    _priceLab.text = q.maxPrice;
+    CGFloat price = [q.maxPrice doubleValue];
+    oldPrice = [q.close floatValue];
+    CGFloat changeValue =price - oldPrice;
+    float  gains =changeValue/price * 100;
+    NSString *change = [NSString stringWithFormat:@"%@%%",[NSString stringWithFormat:@"%.3f",gains]];
+    NSString *changerate = [NSString stringWithFormat:@"%.2f",changeValue];
+    if (emptyStr(change) || emptyStr(changerate) || price == 0) {
+        return;
+    }
+    [self bgFlicker:price];
+    self.name = q.symbolName;
+
+    self.quotation = q;
+    UIColor *color = LTKLineGreen;
+    if ([change floatValue]>0) {
+        color=LTKLineRed;
+        change=[NSString stringWithFormat:@"+%@",change];
+        changerate=[NSString stringWithFormat:@"+%@",[NSString stringWithFormat:@"%.2f",changeValue]];
+    } else if ([change floatValue] == 0) {
+        color=LTGrayColor;
+    }
+    _changeLab.text = [NSString stringWithFormat:@"%@%@%@",change,@"  ",changerate];
+    _priceLab.textColor = color;
+    _changeLab.textColor = color;
+    
 }
 //背景闪动
 - (void)bgFlicker:(CGFloat)price {
@@ -145,7 +174,9 @@
     return lab;
 }
 - (void)bgViewAction {
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:NFC_ClickQuotationBtn object:_quotation];
+    
 }
 
 + (CGFloat)viewH {

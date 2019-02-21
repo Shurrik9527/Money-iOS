@@ -20,7 +20,7 @@ typedef void(^MeSectionBlock)(NSInteger idx);
 
 @interface MeSectionView : UIView
 
-@property (nonatomic,copy) MeSectionBlock meSectionBlock;
+@property (nonatomic,strong) MeSectionBlock meSectionBlock;
 
 - (void)configType:(MeSectionType)type;
 

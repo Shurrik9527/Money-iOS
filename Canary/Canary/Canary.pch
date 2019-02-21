@@ -24,7 +24,7 @@
 #import "LTCategory.h"
 #import "LTAlertView.h"
 
-
+#import "GlobalData.h"
 #import "LTUser.h"
 #import "LTUtils.h"
 #import "PublicData.h"
@@ -39,6 +39,7 @@
 #import "MJExtension.h"
 #define BasisUrl        @"http://app.moyacs.com"
 #define BaseUrl         @"http://47.97.186.123/royal"
+//#define BaseUrl         @"http://www.wjhsh.cn/royal"
 #define SOCKETHOST @"quotation.moamarkets.com"
 #define SOCKETPORT  1234
 #endif /* Canary_pch */

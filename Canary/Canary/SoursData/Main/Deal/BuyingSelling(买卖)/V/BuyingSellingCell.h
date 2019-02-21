@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BuySellingModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)dispatch_block_t guaDanAction;
 @property (nonatomic, strong)dispatch_block_t buyUpAction;
 @property (nonatomic, strong)dispatch_block_t buyDownAction;
+
+@property (nonatomic, strong)BuySellingModel *model;
 
 @end
 

@@ -259,9 +259,10 @@
  file	true	普通参数	File		头像图片
 */
 + (void)reqChangeHeadImage:(NSString *)path finsh:(FinishBlock)block {
-    NSString *uid = UD_UserId;
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:uid,@"userId", nil];
-    NSString *url = URL_UpdateHeadImage;
+//    NSString *uid = UD_UserId;
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"head",@"typeName", nil];
+//    NSString *url = URL_UpdateHeadImage;
+    NSString *url = [NSString stringWithFormat:@"%@/file/upload",BaseUrl];
     [LTRequest baseAuth:url parameters:dict imagePath:path finish:^(LTResponse *res) {
         block(res);
     }];
@@ -825,9 +826,13 @@
                         @{ @"excode" : excode,
                            @"code" : code,
                            @"type" : type}];
-    NSString *url = [NSString stringWithFormat:@"%@?%@",URL_DayChart,params];
+//    NSString *url = [NSString stringWithFormat:@"%@?%@",URL_DayChart,params];
+    NSString * url = @"http://47.91.164.170:8012/price/records?symbol=USDJPY&startDate=25-01-2019%2012:26:51&endDate=25-01-2019%2013:16:51&period=1&server=DEMO";
+
     [LTRequest baseGet:url parameters:nil finish:^(LTResponse *res) {
+        
         block(res);
+        
     }];
 }
 

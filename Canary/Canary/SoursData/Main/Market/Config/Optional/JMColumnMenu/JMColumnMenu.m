@@ -97,12 +97,12 @@
                     model.resident = YES;
                 }
             } else if (type == JMColumnMenuTypeTencent) {
-                if (i != 0) {
+//                if (i != 0) {
                     model.selected = YES;
-                } else {
-                    model.selected = NO;
-                    model.resident = YES;
-                }
+//                } else {
+//                    model.selected = NO;
+//                    model.resident = YES;
+//                }
             }
             [self.tagsArrM addObject:model];
         }
@@ -307,7 +307,7 @@
         for (int i = 0; i < self.tagsArrM.count; i++) {
             JMColumnMenuModel *model = self.tagsArrM[i];
             if (i == 0) {
-                model.selected = NO;
+                model.selected = YES;
             } else {
                 model.selected = YES;
             }
@@ -491,10 +491,11 @@
     NSMutableArray *tempTagsArrM = [NSMutableArray array];
     NSMutableArray *tempOtherArrM = [NSMutableArray array];
     for (JMColumnMenuModel *model in self.tagsArrM) {
-        [tempTagsArrM addObject:model.title];
+        [tempTagsArrM addObject:model.title ? model.title : @""];
     }
+    
     for (JMColumnMenuModel *model in self.otherArrM) {
-        [tempOtherArrM addObject:model.title];
+        [tempOtherArrM addObject:model.title ? model.title : @""];
     }
     
     if ([self.delegate respondsToSelector:@selector(columnMenuTagsArr:OtherArr:AddString:ReductionStirng:)]) {

@@ -11,3 +11,11 @@
 @implementation SocketModel
 
 @end
+
+@implementation SocketCreateTimeModel
+
+@end
+
+@implementation SocketMarketTimeModel
+
+@end

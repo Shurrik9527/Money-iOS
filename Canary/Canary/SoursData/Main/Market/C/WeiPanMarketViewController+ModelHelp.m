@@ -78,82 +78,93 @@
 
 -(void)getDaysStockData
 {
-//    long long now = [[NSDate date] timeIntervalSince1970] * 1000;
-//    long  long startTime =now - self.type.longLongValue *60000 * 50;
-//    NSNumber *nowNumber = [NSNumber numberWithLongLong:now];
-//    NSNumber * StartNumber =[NSNumber numberWithLongLong:startTime];
-//    NSString* nowStr = [DataHundel ConvertStrToTime:nowNumber.stringValue];
-//    NSString * startStr =[DataHundel ConvertStrToTime:StartNumber.stringValue];
-//    NSString * url = [NSString stringWithFormat:@"%@%@",BasisUrl,@"/price/records"];
-//    NSDictionary * dic =@{@"server":@"DEMO",@"symbol":self.code,@"startDate":startStr,@"endDate":nowStr,@"period":self.type};
-//    [[NetworkRequests sharedInstance]GET:url dict:dic succeed:^(id data) {
-//        NSMutableArray * dataArray =[NSMutableArray array];
-//        dataArray =[data objectForKey:@"dataObject"];
-//        if (self.candleList) {
-//            [self.candleList removeAllObjects];
-//            self.candleList=nil;
-//        }
-//        self.candleList = [NSMutableArray arrayWithArray:dataArray];
-//        if (dataArray.count > 0) {
-//            [self hideLoadingView];
-//            NSDictionary *data = [FMKLineModel dictWithList:self.candleList type:self.type];
-//            // 缓存处理
-//            [self getDaysCacheWithDic:data];
-//            NSMutableArray *list = [NSMutableArray arrayWithArray:[data arrayFoKey:@"list"]];
-//            self.model.prices = list;
-//            self.model.klineType=self.type;
-//            if ([self.dayschart respondsToSelector:@selector(updateWithModel:)]) {
-//                self.dayschart.isBlack=YES;
-//                [self.dayschart updateWithModel:self.model];
-//            }
-//            list = nil;
-//            [self.tableview.header endRefreshing];
-//            [self.transform stop];
-//            self.klineNavView.isFinish = YES;
-//        } else {
-//            [self.tableview.header endRefreshing];
-//            [self.transform stop];
-//            self.klineNavView.isFinish = YES;
-//            [self.dayschart error];
-//        }
-//    } failure:^(NSError *error) {
-//
-//    }];
-//
-    
-    WS(ws);
-    [RequestCenter requestKChartWithExcode:ws.excode code:ws.code type:ws.type completion:^(LTResponse *res) {
+    long long now = [[NSDate date] timeIntervalSince1970] * 1000;
+    long  long startTime =now - self.type.longLongValue * 60000 * 50;
+    NSNumber *nowNumber = [NSNumber numberWithLongLong:now];
+    NSNumber * StartNumber =[NSNumber numberWithLongLong:startTime];
+    NSString* nowStr = [DataHundel ConvertStrToTime:nowNumber.stringValue];
+    NSString * startStr =[DataHundel ConvertStrToTime:StartNumber.stringValue];
+    NSString * endStr = nowStr;
+    NSString * url = [NSString stringWithFormat:@"%@%@?symbol=%@&startDate=%@&endDate=%@&period=1&server=DEMO",@"http://47.91.164.170:8012",@"/price/records",self.code,startStr,endStr];
+    NSLog(@"urlllll ===== %@",url);
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
-        NSDictionary *dict = res.resDict;
-        if (ws.candleList) {
-            [ws.candleList removeAllObjects];
-            ws.candleList=nil;
+//    NSString * url = @"http://47.91.164.170:8012/price/records?symbol=USDJPY&startDate=25-01-2019%2012:26:51&endDate=25-01-2019%2013:16:51&period=1&server=DEMO";
+//    NSDictionary * dic =@{@"server":@"DEMO",@"symbol":self.code,@"startDate":startStr,@"endDate":nowStr,@"period":self.type};
+    [[NetworkRequests sharedInstance] GET:url dict:nil succeed:^(id data) {
+        NSLog(@"resssss = %@",data);
+        NSMutableArray * dataArray =[NSMutableArray array];
+        if ([[data objectForKey:@"dataObject"] isEqual:[NSNull null]]) {
+            return ;
         }
-        NSArray *candle = [dict arrayFoKey:@"candle"];
-        ws.candleList=[[NSMutableArray alloc]initWithArray:candle];
-        if (candle.count > 0) {
-            [ws hideLoadingView];
-            NSDictionary *data = [FMKLineModel dictWithList:ws.candleList type:ws.type];
+        dataArray = [data objectForKey:@"dataObject"];
+        if (self.candleList) {
+            [self.candleList removeAllObjects];
+            self.candleList= nil;
+        }
+        self.candleList = [NSMutableArray arrayWithArray:dataArray];
+        if (dataArray.count > 0) {
+            [self hideLoadingView];
+            NSDictionary *data = [FMKLineModel dictWithList:self.candleList type:self.type];
             // 缓存处理
-//            [ws getDaysCacheWithDic:data];
+            [self getDaysCacheWithDic:data];
             NSMutableArray *list = [NSMutableArray arrayWithArray:[data arrayFoKey:@"list"]];
-            ws.model.prices = list;
-            ws.model.klineType=ws.type;
-            if ([ws.dayschart respondsToSelector:@selector(updateWithModel:)]) {
-                ws.dayschart.isBlack=YES;
-                [ws.dayschart updateWithModel:ws.model];
+            self.model.prices = list;
+            self.model.klineType = self.type;
+            if ([self.dayschart respondsToSelector:@selector(updateWithModel:)]) {
+                self.dayschart.isBlack = YES;
+                [self.dayschart updateWithModel:self.model];
             }
             list = nil;
-            [ws.tableview.header endRefreshing];
-            [ws.transform stop];
-            ws.klineNavView.isFinish = YES;
+            [self.tableview.header endRefreshing];
+            [self.transform stop];
+            self.klineNavView.isFinish = YES;
         } else {
-            [ws.tableview.header endRefreshing];
-            [ws.transform stop];
-            ws.klineNavView.isFinish = YES;
-            [ws.dayschart error];
+            [self.tableview.header endRefreshing];
+            [self.transform stop];
+            self.klineNavView.isFinish = YES;
+            [self.dayschart error];
         }
+    } failure:^(NSError *error) {
+
     }];
+
+    
+//    WS(ws);
+//    [RequestCenter requestKChartWithExcode:ws.excode code:ws.code type:ws.type completion:^(LTResponse *res) {
+//
+//        NSDictionary *dict = res.resDict;
+//        if (ws.candleList) {
+//            [ws.candleList removeAllObjects];
+//            ws.candleList=nil;
+//        }
+//        NSArray *candle = [dict arrayFoKey:@"candle"];
+//
+//        ws.candleList=[[NSMutableArray alloc]initWithArray:candle];
+//
+//        if (candle.count > 0) {
+//            [ws hideLoadingView];
+//            NSDictionary *data = [FMKLineModel dictWithList:ws.candleList type:ws.type];
+//            // 缓存处理
+////            [ws getDaysCacheWithDic:data];
+//            NSMutableArray *list = [NSMutableArray arrayWithArray:[data arrayFoKey:@"list"]];
+//            ws.model.prices = list;
+//            ws.model.klineType= ws.type;
+//            if ([ws.dayschart respondsToSelector:@selector(updateWithModel:)]) {
+//                ws.dayschart.isBlack=YES;
+//                [ws.dayschart updateWithModel:ws.model];
+//            }
+//            list = nil;
+//            [ws.tableview.header endRefreshing];
+//            [ws.transform stop];
+//            ws.klineNavView.isFinish = YES;
+//        } else {
+//            [ws.tableview.header endRefreshing];
+//            [ws.transform stop];
+//            ws.klineNavView.isFinish = YES;
+//            [ws.dayschart error];
+//        }
+//    }];
 }
 //获取缓存数据
 -(void)getDaysCacheWithDic:(NSDictionary*)dic{

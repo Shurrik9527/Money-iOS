@@ -835,6 +835,7 @@ NSInteger bundleIntegerVersion() {
     
     return price;
 }
+
 +(NSString *)getNowTimeString
 {
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
@@ -848,10 +849,11 @@ NSInteger bundleIntegerVersion() {
     NSInteger interval = [zone secondsFromGMTForDate: date];
     
     NSDate *localeDate = [date  dateByAddingTimeInterval: interval];
-    NSLog(@"%@", localeDate);
+//    NSLog(@"%@", localeDate);
     NSString *nowTime=[formatter stringFromDate:localeDate];
     return nowTime;
 }
+
 #pragma mark - 获取当前天数
 +(NSString *)getNowDayString{
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
@@ -1107,7 +1109,7 @@ NSInteger bundleIntegerVersion() {
     return str;
 }
 
-+(NSString*)timeFormat_ShortHourStyle:(double)time{
++ (NSString*)timeFormat_ShortHourStyle:(double)time{
     
     NSString *str = @"";
     NSDateComponents *com = [self getDateComponents:[NSDate dateWithTimeIntervalSince1970:time]];
@@ -1184,6 +1186,7 @@ NSInteger bundleIntegerVersion() {
     str = [NSString stringWithFormat:@"%ld.%@.%@ %@:%@",com.year,month,day,hour,minute];
     return str;
 }
+
 +(double)timeformat_shortTime:(NSString *)time
 {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -1197,9 +1200,10 @@ NSInteger bundleIntegerVersion() {
     NSString *newTime=[NSString stringWithFormat:@"%@-%@:00",year,time];
     NSDate *date = [dateFormatter dateFromString:newTime];
     
-    double timep=[date timeIntervalSince1970];
+    double timep = [date timeIntervalSince1970];
     return timep;
 }
+
 +(double)timeformat_hourTime:(NSString *)time
 {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];

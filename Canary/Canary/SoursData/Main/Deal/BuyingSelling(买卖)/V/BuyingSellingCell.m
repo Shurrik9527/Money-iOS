@@ -82,6 +82,21 @@
     }
 }
 
+- (void)setModel:(BuySellingModel *)model{
+    _model = model;
+    
+    self.nameLabel.text = model.symbolName;
+    
+    self.priceOne.text = [NSString stringWithFormat:@"%.f",model.unitPriceOne];
+    self.priceTwo.text = [NSString stringWithFormat:@"%.f",model.unitPriceTwo];
+    self.priceThree.text = [NSString stringWithFormat:@"%.f",model.unitPriceThree];
+    
+    self.countOne.text = [NSString stringWithFormat:@"%.f",model.quantityOne];
+    self.countTwp.text = [NSString stringWithFormat:@"%.f",model.quantityTwo];
+    self.countThree.text = [NSString stringWithFormat:@"%.f",model.quantityThree];
+
+}
+
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

@@ -22,9 +22,9 @@
     
     // [ GTSdk ]：自定义渠道
     [GeTuiSdk setChannelId:@"FXBTG-AppStore"];
-    NSLog(@"kGtAppId = %@",kGtAppId);
-    NSLog(@"kGtAppKey = %@",kGtAppKey);
-    NSLog(@"kGtAppSecret = %@",kGtAppSecret);
+//    NSLog(@"kGtAppId = %@",kGtAppId);
+//    NSLog(@"kGtAppKey = %@",kGtAppKey);
+//    NSLog(@"kGtAppSecret = %@",kGtAppSecret);
     NFC_AddObserver(NFC_CID, @selector(collectGTInfo));//收集个推信息
     // [ GTSdk ]：使用APPID/APPKEY/APPSECRENT创建个推实例
     [GeTuiSdk startSdkWithAppId:kGtAppId appKey:kGtAppKey appSecret:kGtAppSecret delegate:self];
@@ -126,7 +126,7 @@
 /** SDK运行状态通知 */
 - (void)GeTuiSDkDidNotifySdkState:(SdkStatus)aStatus {
     // 通知SDK运行状态
-    NSLog(@"\n>>[GTSdk SdkState]:%u\n\n", aStatus);
+//    NSLog(@"\n>>[GTSdk SdkState]:%u\n\n", aStatus);
 }
 
 /** SDK设置推送模式回调 */

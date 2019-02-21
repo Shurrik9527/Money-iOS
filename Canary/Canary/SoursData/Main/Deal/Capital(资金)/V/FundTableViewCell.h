@@ -14,5 +14,5 @@
 @property (nonatomic,strong)UILabel * symLabel;
 @property (nonatomic,strong)UILabel * priceLabel;
 @property (nonatomic,strong)UILabel * timeLabel;
--(void)getModel:(postionModel *)mode;
+- (void)getModel:(postionModel *)mode;
 @end

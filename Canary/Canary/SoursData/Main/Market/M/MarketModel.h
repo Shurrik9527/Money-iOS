@@ -24,4 +24,23 @@
 @property (nonatomic,assign)NSUInteger  digit;//小数点点位数
 @property (nonatomic,assign)BOOL visible;//是否显示
 @property (nonatomic,assign)BOOL trading;//是否可交易
+
+
+@property (nonatomic,copy)NSString *entryOrders;
+@property (nonatomic,copy)NSString *id;
+@property (nonatomic,copy)NSString *quantityCommissionCharges;
+@property (nonatomic,assign)NSInteger quantityOne;
+@property (nonatomic,copy)NSString *quantityOvernightFee;
+@property (nonatomic,copy)NSString *quantityPriceFluctuation;
+@property (nonatomic,assign)NSInteger quantityThree;
+@property (nonatomic,assign)NSInteger quantityTwo;
+@property (nonatomic,assign)NSInteger status;
+@property (nonatomic,copy)NSString *symbolCode;
+@property (nonatomic,copy)NSString *symbolName;
+@property (nonatomic,assign)CGFloat symbolShow;
+@property (nonatomic,assign)NSInteger symbolType;
+@property (nonatomic,assign)CGFloat unitPriceOne;
+@property (nonatomic,assign)CGFloat unitPriceThree;
+@property (nonatomic,assign)CGFloat unitPriceTwo;
+
 @end

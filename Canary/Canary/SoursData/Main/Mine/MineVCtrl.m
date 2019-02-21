@@ -19,6 +19,11 @@
 #import "FocusVC.h"
 #import "CertificationVCtrl.h"
 #import "CertificationResultVC.h"
+#import "MeAssetsView.h"
+#import "CashCouponVC.h"
+#import "WebView.h"
+#import "AuthVC.h"
+#import "TopUpVC.h"
 
 #define MeVCtrlDatas    @[\
                                                 @[@"一分钟了解汇大师"],\
@@ -46,7 +51,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.datas = [NSMutableArray arrayWithArray:MeVCtrlDatas];
+        self.datas = [@[@"消息中心",@"推送设置",@"一分钟了解汇大师",@"版本检测",@"关于我们"] mutableCopy];
 
     }
     return self;
@@ -57,13 +62,16 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginSuccess) name:NFC_LocLogin object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(logout) name:NFC_LocLogout object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAuthCtrl) name:NFC_PushAuthVC object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushLoginCtrl) name:NFC_PushLoginVC object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountManagerVC) name:NFC_PushAccountManager object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginSuccess) name:NFC_LocLogin object:nil];
+
     
     [self configstateBarColor];
     [self createHeadView];
-    [self createSectionView];
+
+//    [self createSectionView];
     [self createTableView];
 }
 
@@ -73,6 +81,11 @@
     [self configDatas];
     [self.tableView setContentOffset:CGPointMake(0, 0)];
     [self stateBarToFront:NO];
+    if ([LTUser hasLogin]) {
+//        [self networkgGetMoney];
+        [self.headView updateHeadImg];
+        [self.headView updateNickName];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -95,11 +108,35 @@
     [self pushLocLogin];
 }
 
+- (void)pushAuthCtrl {
+    AuthVC *vc = [[AuthVC alloc] init];
+//    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushVC:vc];
+}
+
 #pragma mark - 请求
 
 - (void)loadData {
     [self reqCardDistStatus:NO];
 }
+
+- (void)networkgGetMoney{
+    NSString * url = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/userAmount/get"];
+    [[NetworkRequests sharedInstance] SWDPOST:url dict:nil succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
+        NSLog(@"res == %@",resonseObj);
+        if (isSuccess) {
+            
+        }else{
+            
+        }
+        
+    } failure:^(NSError *error) {
+        
+        
+    }];
+    
+}
+
 
 //认证状态 1：认证失败，2：资料未认证，3：认证中，4：认证成功
 - (void)reqCardDistStatus:(BOOL)needPush {
@@ -367,6 +404,42 @@
 }
 
 
+//充值
+- (void)pushChongZhi {
+    if (![LTUser hasLogin]) {
+        [self checkLocHasLogin:@"登录后可以充值"];
+        return;
+    }
+
+    TopUpVC * webView =[[TopUpVC alloc]init];
+    [self.navigationController pushVC:webView];
+}
+
+//代金券
+- (void)pushCashCoupon {
+    
+    if (![LTUser hasLogin]) {
+        [self checkLocHasLogin:@"登录后可以查看代金券"];
+        return;
+    }
+    
+    CashCouponVC *ctrl = [[CashCouponVC alloc] init];
+    [self pushVC:ctrl];
+}
+
+//盈亏
+- (void)pushYingkui {
+    
+    if (![LTUser hasLogin]) {
+        [self checkLocHasLogin:@"登录后可以查看盈亏"];
+        return;
+    }
+    
+    [AppDelegate selectTabBarIndex:TabBarType_Deal];
+
+}
+
+
 
 #pragma mark - Table
 
@@ -381,6 +454,8 @@
     [self.view addSubview:self.tableView];
     
     
+    [self.tableView registerNib:[UINib nibWithNibName:@"MeAssetsView" bundle:nil] forCellReuseIdentifier:NSStringFromClass([MeAssetsView class])];
+    
     UIView *foot = [[UIView alloc] init];
     foot.frame = CGRectMake(0, 0, self.w_, 60);
     self.tableView.tableFooterView = foot;
@@ -391,7 +466,8 @@
 // 审核 隐藏
 - (void)configDatas {
     [self.datas removeAllObjects];
-    self.datas = [NSMutableArray arrayWithArray:MeVCtrlDatas];
+//    self.datas = [NSMutableArray arrayWithArray:MeVCtrlDatas];
+    self.datas = [@[@"消息中心",@"一分钟了解汇大师",@"版本检测",@"关于我们"] mutableCopy];
 }
 
 - (void)setUnReadMsgCount:(NSInteger)unReadMsgCount {
@@ -404,7 +480,7 @@
 #pragma mark UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return _datas.count + 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -412,8 +488,8 @@
     if (section < 2) {
         return 1;
     }
-    section-=2;
-    return ((NSArray *)_datas[section]).count;
+
+    return _datas.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -430,15 +506,32 @@
     }
     
     else if (indexPath.section == 1) {
-        static NSString *identifier=@"MeCell1";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        }
-        [cell addSubview:_sectionView];
+        MeAssetsView *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([MeAssetsView class]) forIndexPath:indexPath];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        WS(ws)
+        cell.selectActionBlock = ^(NSInteger index) {
+            if (index == 0) {
+                [ws pushCashCoupon];
+            }else if (index == 1){
+                [ws pushYingkui];
+            }else if (index == 2){
+                [ws pushChongZhi];
+            }
+            
+        };
         return cell;
     }
+    
+//    else if (indexPath.section == 2) {
+//        static NSString *identifier=@"MeCell1";
+//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+//        if (cell == nil) {
+//            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+//        }
+//        [cell addSubview:_sectionView];
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//        return cell;
+//    }
     
     static NSString *identifier=@"MeCell";
     MeCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
@@ -446,11 +539,9 @@
         cell = [[MeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-    NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
-    section-=2;
     
-    NSString *data = _datas[section][row];
+    NSString *data = _datas[row];
     [cell bindData:data];
     
     return cell;
@@ -460,7 +551,7 @@
 
 static CGFloat HeaderSectionH = 8;
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (section==0) {
+    if (section == 0 || section == 1) {
         return nil;
     }
     
@@ -469,7 +560,7 @@ static CGFloat HeaderSectionH = 8;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
+    if (section == 0 || section == 1) {
         return 0;
     }
     return LTAutoW(HeaderSectionH);
@@ -484,8 +575,14 @@ static CGFloat HeaderSectionH = 8;
     }
     
     else if (section == 1) {
-        return LTAutoW(kMeSectionViewH);
+//        return [LTUser hasLogin] ? 140 : 0;
+        return  0;
     }
+    
+//    else if (section == 2) {
+//        return LTAutoW(kMeSectionViewH);
+//    }
+    
     return LTAutoW(kMeCellH);
 }
 
@@ -495,15 +592,14 @@ static CGFloat HeaderSectionH = 8;
         return;
     }
     
-    section-=2;
     NSInteger row = indexPath.row;
     
-    NSString *txt = _datas[section][row];
+    NSString *txt = _datas[row];
     
     UMengEventWithParameter(page_me, @"name", txt);
     
     if ([txt isEqualToString:@"一分钟了解汇大师"]) {
-        [self pushWeb:URL_Home_NewComer title:txt];
+        [self pushWeb:@"http://www.zhangstz.com/xsxt/zh-CN/index.html" title:txt];
         return;
     }
     if ([txt isEqualToString:@"常见问题"]) {
@@ -548,7 +644,7 @@ static CGFloat HeaderSectionH = 8;
     
     
     if ([txt isEqualToString:@"关于我们"]) {
-        NSURL *url=[NSURL URLWithString:URL_AboutUS];
+        NSURL *url=[NSURL URLWithString:@"http://www.zhangstz.com/aboutus/aboutus-zh-CN.html"];
        WebVCtrl *ctrl = [[WebVCtrl alloc]initWithTitle:@"关于我们" url:url returnType:BackType_PopVC];
         [self pushVC:ctrl];
         return;

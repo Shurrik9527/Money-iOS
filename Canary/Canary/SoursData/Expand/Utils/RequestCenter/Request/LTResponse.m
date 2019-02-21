@@ -50,7 +50,7 @@
             _rawDict = dict;
             //初始化基本参数
             _code = [_rawDict stringFoKey:@"msgCode"];
-            _success = [_rawDict stringFoKey:@"msgCode"] == 0;
+            _success = [[_rawDict stringFoKey:@"msgCode"] integerValue] == 0;
             _message = [_rawDict stringFoKey:@"msg"];
             _data = [_rawDict objectForKey:@"data"];
             //扩展属性

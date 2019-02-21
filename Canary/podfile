@@ -12,4 +12,7 @@ target 'Canary' do
     pod 'PLPlayerKit', '~> 2.2.2'
     pod 'libqrencode', '3.4.2'
     pod 'NIMSDK'
+    pod 'XLForm'
+    pod 'SocketRocket'
+    
 end

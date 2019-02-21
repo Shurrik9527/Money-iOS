@@ -141,43 +141,58 @@
 -(void)updateDaysViewForSocket {
     //获取时间间隔
     NSInteger timeNum =  [LTUtils timeNumberWithType:self.type];
-    if (timeNum>=60*60*24*7) {
+    if (timeNum >= 60 * 60 * 24 * 7) {
         return;
     }
     //获取最后一个数据
-    NSDictionary *lastDic=[self.candleList lastObject];
+    NSDictionary *lastDic = [self.candleList lastObject];
+    
+    NSDictionary *lastTwoDic = lastDic;
+    if (self.candleList.count > 2) {
+        lastTwoDic = self.candleList[self.candleList.count - 2];
+    }
+
     if (![kPublicData isNull:lastDic] && self.model.isFinished) {
         return;
     }
     
     //获取当前时间
     NSString *timeStr = [NSString stringWithFormat:@"%@",self.stockDish.quotetime];
-    timeStr=[timeStr substringToIndex:10];
-    BOOL isAdd=[self isAddTimeCacular];
+    timeStr = [timeStr substringToIndex:10];
+    BOOL isAdd = [self isAddTimeCacular];
     
-    NSString *open=[lastDic objectForKey:@"open"];
+    NSString *open= [lastDic objectForKey:@"open"];
     NSString *heigh=self.stockDish.sell.floatValue>[[lastDic objectForKey:@"high"] floatValue]?self.stockDish.sell :[lastDic objectForKey:@"high"];
     NSString *low=self.stockDish.sell.floatValue<[[lastDic objectForKey:@"low"] floatValue]?self.stockDish.sell :[lastDic objectForKey:@"low"];
-    NSString *lastTimeStr=[lastDic objectForKey:@"time"];
+    NSString *lastTimeStr= [NSString stringWithFormat:@"%@",[lastDic objectForKey:@"time"]];
+//    if (lastTimeStr.length > 10) {
+//        lastTimeStr = [lastTimeStr substringToIndex:10];
+//    }
 
-    NSString *close=self.stockDish.sell;
+    NSString *close= self.stockDish.sell;
     NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
     if (isAdd) {
         NSDictionary *lastDic=[self.candleList lastObject];//获取最后一个数据
-        NSString *lastTime =  [lastDic objectForKey:@"time"];//对比时间差
-        NSInteger lastTimeNum = [LTUtils timeformat_shortTime:lastTime];
-        NSInteger newTime = lastTimeNum + timeNum;
+        NSString *lastTime = [lastDic objectForKey:@"time"];//对比时间差
+//        NSInteger lastTimeNum = [LTUtils timeformat_shortTime:lastTime];
+//        NSInteger newTime = lastTimeNum + timeNum;
         
-        NSString *timeStr = [NSString stringWithFormat:@"%@",self.stockDish.quotetime];
-        timeStr=[timeStr substringToIndex:10];
-        NSInteger timeDouble = timeStr.doubleValue;
-        NSString *time = [LTUtils timeFormat_ShortHourStyle:timeStr.doubleValue];
-        if (newTime>timeDouble) {
-            NSInteger n = (timeDouble-lastTimeNum)/timeNum+1;
-            newTime =lastTimeNum +n*timeNum;
-        }
-        time = [LTUtils timeFormat_ShortHourStyle:newTime];
+//        NSString *timeStr = [NSString stringWithFormat:@"%@",self.stockDish.quotetime];
+//        timeStr=[timeStr substringToIndex:10];
 
+//        NSInteger timeDouble = timeStr.doubleValue;
+        NSString *time = [LTUtils timeFormat_ShortHourStyle:timeStr.doubleValue];
+        time = [NSString stringWithFormat:@"%ld000",[lastTime integerValue] / 1000 + timeNum];
+        if (time.length < 10) {
+            NSDate *datenow = [NSDate date];
+            time = [NSString stringWithFormat:@"%f000",[datenow timeIntervalSince1970]];
+        }
+//        if (newTime > timeDouble) {
+//            NSInteger n = (timeDouble-lastTimeNum)/timeNum+1;
+//            newTime =lastTimeNum +n*timeNum;
+//        }
+//        time = [LTUtils timeFormat_ShortHourStyle:newTime];
+        NSLog(@"time ============= %@",time);
         //添加
         [dic setObject:self.stockDish.sell forKey:@"open"];
         [dic setObject:self.stockDish.sell forKey:@"high"];
@@ -214,8 +229,8 @@
     
     NSMutableDictionary *KDJ = [FMStockIndexs getKDJMap:list];
     item = [FMStockIndexs klineItemWithArray:prices Dictionary:item index:prices.count-1 KDJ:KDJ];
-    NSDictionary *ld=[self.candleList lastObject];
-    NSString *lt = [ld stringFoKey:@"t"];
+    NSDictionary *ld = [self.candleList lastObject];
+    NSString *lt = [ld stringFoKey:@"time"];
     NSLog(@"ld = %@   lt = %f",ld,[LTUtils timeformat_shortTime:lt]);
 
     if (isAdd) {
@@ -248,7 +263,7 @@
         [prices insertObject:emptyKline atIndex:0];
         [prices addObject:emptyKline];
     }
-    self.model.prices=prices;
+    self.model.prices = prices;
     [self.dayschart updateWithModel:self.model];
     
     [self.tableview.header endRefreshing];
@@ -288,29 +303,35 @@
 //candleList替换或者添加操作。
 -(void)candleListWithLastData:(NSDictionary *)dic isAdd:(BOOL)isAdd{
     if (isAdd) {
-        NSLog(@"time = %@",[dic stringFoKey:@"t"]);
+        NSLog(@"time = %@",[dic stringFoKey:@"time"]);
         [self.candleList addObject:dic];
         if (self.candleList.count>300) {
             [self.candleList removeObjectAtIndex:0];
         }
     }else{
-        NSLog(@"last time = %@",[dic stringFoKey:@"t"]);
+        NSLog(@"last time = %@",[dic stringFoKey:@"time"]);
         [self.candleList replaceObjectAtIndex:self.candleList.count-1 withObject:dic];
     }
 }
 //通过计算时间得出是添加YES还是替换NO数据
 -(BOOL)isAddTimeCacular{
-    BOOL isAdd=NO;
+    BOOL isAdd = NO;
     if (self.candleList.count>0) {
         NSInteger timeNum = [LTUtils timeNumberWithType:self.type];//根据type计算出每个项之间的时间差为多少
         //获取当前时间
         NSString *timeStr = [NSString stringWithFormat:@"%@",self.stockDish.quotetime];
-        timeStr=[timeStr substringToIndex:10];
-        NSString *time = [LTUtils timeforMin:[timeStr doubleValue]];
+        timeStr = [timeStr substringToIndex:10];
+//        NSString *time = [LTUtils timeforMin:[timeStr doubleValue]];
+
+        NSDate *datenow = [NSDate date];
+        timeStr = [NSString stringWithFormat:@"%f",[datenow timeIntervalSince1970]];
+        NSString *time = [LTUtils timeforMin:[datenow timeIntervalSince1970]];
+
         NSDictionary *lastDic=[self.candleList lastObject];//获取最后一个数据
-        NSString *lastTime =  [lastDic objectForKey:@"t"];//对比时间差
-        NSInteger lastTimeNum = [LTUtils timeformat_shortTime:lastTime];
-        if (timeNum==60*60*24) {
+        NSString *lastTime =  [NSString stringWithFormat:@"%@",[lastDic objectForKey:@"time"]];//对比时间差
+//        NSInteger lastTimeNum = [LTUtils timeformat_shortTime:[[NSString stringWithFormat:@"%@",lastTime] substringToIndex:10]];
+        NSInteger lastTimeNum = lastTime.length == 10 ? [lastTime integerValue] : [lastTime integerValue] / 1000;
+        if (timeNum == 60 * 60 * 24) {
             lastTime=[lastTime substringWithRange:NSMakeRange(lastTime.length-5, 5)];
             lastTime = [NSString stringWithFormat:@"%@ 00:00",lastTime];
             lastTimeNum=[LTUtils timeformat_shortTime:lastTime];
@@ -318,7 +339,7 @@
         NSInteger timeCount = timeStr.integerValue;
         NSInteger timesub= timeCount - lastTimeNum;
         NSLog(@" time = %@ lastTime = %@ timesub = %li",time,lastTime , timesub);
-        if(timeNum<=60){//1分
+        if(timeNum <= 60){//1分
             if (timesub <timeNum) {
                 isAdd=NO;
             } else {

@@ -20,16 +20,19 @@
 #import "DiscountFigureModel.h"
 #import "NetworkRequests.h"
 #import "WebView.h"
+#import "GuaDanView.h"
+#import <CommonCrypto/CommonDigest.h>
+#import "JWTHundel.h"
+#import "WebSocket.h"
 @interface WeiPanMarketViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 /** 持仓轮询timer */
-@property (nonatomic,strong) NSTimer *holdListTimer;
 @property (nonatomic,strong) SellProductView *sellProductView;
 
 @property (nonatomic,assign) BOOL buyUp;
-@property(strong,nonatomic)NewBuyView *buyView;
-
-@property (nonatomic,strong) WarningView *warningView;//警告
+@property (strong,nonatomic)NewBuyView *buyView;
+@property (nonatomic,strong)GuaDanView *guaView;
+@property (nonatomic,strong)WarningView *warningView;//警告
 @property (nonatomic,strong)NSMutableArray * dataArray;//装图数据的数组
 
 @property (nonatomic,copy) NSString *marginLevel;//预付款比例
@@ -92,24 +95,79 @@ static BOOL firstFlag = YES;
     [self createBuyView];
     [self createSellView];
     
+    
+//    [self networkReserve];
 }
+
 -(void)newRequest :(NSString * )timeStr
 {
     long long now = [[NSDate date] timeIntervalSince1970] * 1000;
-    long  long startTime =now - timeStr.longLongValue *60000 * 50;
+    long  long startTime =now - timeStr.longLongValue * 60000 * 50;
     NSNumber *nowNumber = [NSNumber numberWithLongLong:now];
     NSNumber * StartNumber =[NSNumber numberWithLongLong:startTime];
     NSString* nowStr = [DataHundel ConvertStrToTime:nowNumber.stringValue];
     NSString * startStr =[DataHundel ConvertStrToTime:StartNumber.stringValue];
     NSString * url = [NSString stringWithFormat:@"%@%@",BasisUrl,@"/price/records"];
     NSDictionary * dic =@{@"server":@"DEMO",@"symbol":_code,@"startDate":startStr,@"endDate":nowStr,@"period":timeStr};
-    [[NetworkRequests sharedInstance]GET:url dict:dic succeed:^(id data) {
+    [[NetworkRequests sharedInstance] GET:url dict:dic succeed:^(id data) {
+        NSLog(@"resss = %@",data);
         self.dataArray =[data objectForKey:@"dataObject"];
         [self.model.prices addObjectsFromArray:self.dataArray];
     } failure:^(NSError *error) {
-        
+        NSLog(@"error = %@",error);
+
     }];
 }
+
+- (void)networkBuy:(NSDictionary *)dic{
+
+    NSString * url = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/transaction/buy"];
+    WS(ws)
+    [[NetworkRequests sharedInstance] SWDPOST:url dict:dic succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
+        
+        if (isSuccess){
+            NSLog(@"res == %@",resonseObj);
+            [self.guaView closeView];
+            
+            [ws.view showTip:@"买入成功"];
+
+        }else{
+            [ws.view showTip:message];
+        }
+        
+    } failure:^(NSError *error) {
+        NSLog(@"error === %@",error);
+
+        
+    }];
+    
+}
+
+- (void)networkReserve:(NSDictionary *)dic{
+    
+    NSString * url = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/transaction/reserve"];
+    WS(ws)
+    [[NetworkRequests sharedInstance] SWDPOST:url dict:dic succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
+        
+        if (isSuccess){
+            NSLog(@"res == %@",resonseObj);
+            [self.guaView closeView];
+            
+            [ws.view showTip:@"挂单成功"];
+            
+        }else{
+            [ws.view showTip:message];
+        }
+        
+    } failure:^(NSError *error) {
+        NSLog(@"error === %@",error);
+        
+        
+    }];
+    
+}
+
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     UMengEvent(page_product_detail);// 品种详情页面的事件统计
@@ -123,17 +181,18 @@ static BOOL firstFlag = YES;
     [self flagForMarket:YES];
     //长链接
     [self addNotification];
+    
+    [self webSocketStart];
+    
 }
--(void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
+
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:YES];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     [self.headerview animationStop];
     
-    [self canclePollingHoldList];
 }
+
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [self flagForMarket:NO];
@@ -164,31 +223,45 @@ static BOOL firstFlag = YES;
         headerViewCell.change.textColor = LTKLineGreen;
         headerViewCell.changerate.textColor = LTKLineGreen;
     }
-    [headerViewCell.price countFrom:0.00 to:_price.doubleValue withDuration:0.4];
+    self.buyModel.price = self.buyModel.price.length ? self.buyModel.price : self.buyModel.close;
+    [headerViewCell.price countFrom:0.00 to:self.buyModel.price.doubleValue withDuration:0.4];
     headerViewCell.changerate.text = _changeCHa;
     headerViewCell.change.text = _change;
-    NSString * timeStr =[NSString stringWithFormat:@"%@ %@",_dataStr, _timeStr];
-    long long  haomiao_=  [DataHundel getZiFuChuan:timeStr];
-    long long lastTime = haomiao_  +( 5 * 60*60*1000);
-    NSNumber *longlongNumber = [NSNumber numberWithLongLong:lastTime];
-    NSString *longlongStr = [longlongNumber stringValue];
-    headerViewCell.time.text =[DataHundel convertime:longlongStr];
-    NSString * percentage =[NSString stringWithFormat:@"%@%@%@",@"%0.",[NSString stringWithFormat:@"%ld",_digit],@"f"];
-    headerViewCell.close_price.text = [NSString stringWithFormat:percentage,_close.floatValue];
-    headerViewCell.heigt_price.text = [NSString stringWithFormat:percentage,_high.floatValue];
-    headerViewCell.low_price.text = [NSString stringWithFormat:percentage,_low.floatValue];
-    headerViewCell.open_price.text = [NSString stringWithFormat:percentage,_open.floatValue];
+//    NSString * timeStr =[NSString stringWithFormat:@"%@ %@",_dataStr, _timeStr];
+//    long long  haomiao_=  [DataHundel getZiFuChuan:timeStr];
+//    long long lastTime = haomiao_  +( 5 * 60*60*1000);
+//    NSNumber *longlongNumber = [NSNumber numberWithLongLong:lastTime];
+//    NSString *longlongStr = [longlongNumber stringValue];
+//    headerViewCell.time.text =[DataHundel convertime:longlongStr];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    NSDate *datenow = [NSDate date];
+    NSString *currentTimeString = [formatter stringFromDate:datenow];
+    headerViewCell.time.text = currentTimeString;
+    
+    NSArray *ar = [_buyModel.entryOrders componentsSeparatedByString:@"."];
+    
+    NSString * percentage =[NSString stringWithFormat:@"%@%@%@",@"%0.",[NSString stringWithFormat:@"%ld",ar.count == 0 ? _buyModel.entryOrders.length : ar.count == 2 ? [ar.lastObject length] : 1],@"f"];
+//    headerViewCell.close_price.text = [NSString stringWithFormat:percentage,_close.floatValue];
+//    headerViewCell.heigt_price.text = [NSString stringWithFormat:percentage,_high.floatValue];
+//    headerViewCell.low_price.text = [NSString stringWithFormat:percentage,_low.floatValue];
+//    headerViewCell.open_price.text = [NSString stringWithFormat:percentage,_open.floatValue];
+    headerViewCell.close_price.text = [NSString stringWithFormat:percentage,_buyModel.close.floatValue];
+    headerViewCell.heigt_price.text = [NSString stringWithFormat:percentage,_buyModel.maxPrice.floatValue];
+    headerViewCell.low_price.text = [NSString stringWithFormat:percentage,_buyModel.minPrice.floatValue];
+    headerViewCell.open_price.text = [NSString stringWithFormat:percentage,_buyModel.open.floatValue];
+    headerViewCell.tag = 10001;
     //获取socket数据
-    [[AsSocket shareDataAsSocket]setReturnValueBlock:^(NSMutableArray *socketArray) {
-        if (socketArray.count > 0) {
-            for (SocketModel * model in socketArray) {
-                if ([model.symbol isEqualToString:self.code]) {
-                    [headerViewCell upDataHeaderPrice:model];
-                    [self.buyView addCode:self.code code_cn:self.titler prcieIn:model.buy_in priceOut:model.buy_out ];
-                }
-            }
-        }
-    }];
+//    [[AsSocket shareDataAsSocket] setReturnValueBlock:^(NSMutableArray *socketArray) {
+//        if (socketArray.count > 0) {
+//            for (SocketModel * model in socketArray) {
+//                if ([model.symbol isEqualToString:self.code]) {
+//                    [headerViewCell upDataHeaderPrice:model];
+//                    [self.buyView addCode:self.code code_cn:self.titler prcieIn:model.buy_in priceOut:model.buy_out ];
+//                }
+//            }
+//        }
+//    }];
     return headerViewCell;
 }
 
@@ -274,20 +347,38 @@ static BOOL firstFlag = YES;
         [self.view addSubview:_footerview];
         WS(ws);
         _footerview.kChatLineFootViewBlock = ^(NSString *buttonName){
+            
+
+            if ([ws checkLocHasLogin:@"需要登录后才能使用!"]) {
+
+            }else{
+                return ;
+            }
+            
             if ([buttonName isEqualToString:@"买涨"]) {
                 JudgeUserCanUseDeal;
-                [ws pushToOrderView:YES];// 点击跳转订单页
+                [ws showGuaDanView:NO isDown:NO];
+
             }
             else if ([buttonName isEqualToString:@"买跌"]) {
                 JudgeUserCanUseDeal;
-                [ws pushToOrderView:NO];// 点击跳转订单页
+                [ws showGuaDanView:NO isDown:YES];
+
             }
             else if ([buttonName isEqualToString:@"平仓"]) {
                 JudgeUserCanUseDeal;
                 [ws showSellProduct];// 出现平仓列表
             }
-            else if ([buttonName isEqualToString:@"暂无持仓"]) {
+            else if ([buttonName isEqualToString:@"挂单"]) {
                 //无点击事件
+//                [ws pushToDealViewController];// 点击跳转订单页
+                [ws showGuaDanView:YES isDown:NO];
+
+            }
+            else if ([buttonName isEqualToString:@"持仓"]) {
+                //无点击事件
+                [ws pushToDealViewController];// 点击跳转订单页
+
             }
             else if ([buttonName isEqualToString:@"查看持仓"]) {
                 //token过期时
@@ -319,6 +410,29 @@ static BOOL firstFlag = YES;
         }
     }
 }
+
+- (void)showGuaDanView:(BOOL)isGuaDan isDown:(BOOL)isDown{
+    GuaDanView *gua = [[NSBundle mainBundle]loadNibNamed:@"GuaDanView" owner:nil options:nil].firstObject;
+    gua.isGuaDan = isGuaDan;
+    gua.isBuyDown = isDown;
+    gua.model = _buyModel;
+    WS(ws)
+    gua.retureBuyDic = ^(NSDictionary * _Nonnull buyDic, BOOL isGuaDan) {
+        
+        if (isGuaDan) {
+            [ws networkReserve:buyDic];
+
+        }else{
+            [ws networkBuy:buyDic];
+
+        }
+    };
+    gua.frame = CGRectMake(0, 0, Screen_width, Screen_height);
+    [self.view addSubview:gua];
+    self.guaView = gua;
+    
+}
+
 // 单独为横屏创建头部
 -(void)createHorizontalHeaderView {
     if (!_horizontalHeaderView) {
@@ -471,6 +585,84 @@ static BOOL firstFlag = YES;
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
+- (void)webSocketStart{
+    WS(ws)
+    [[WebSocket shareDataAsSocket] setReturnValueBlock:^(SocketModel * _Nonnull socketModel) {
+//        NSLog(@"price == %@  = %@",socketModel.symbolCode,socketModel.price);
+        if ([socketModel.symbolCode isEqualToString:ws.code]) {
+            [ws updateQuotationsTwo:socketModel];
+            ws.buyModel.price = socketModel.price;
+            if (ws.guaView) {
+                ws.guaView.priceStr = socketModel.price;
+            }
+        }
+
+    }];
+}
+
+- (void)updateQuotationsTwo:(SocketModel *)obj {
+//    NSLog(@"price === %@",obj.price);
+
+//        if (obj) {
+    KLineHeaderView *headerViewCell = (KLineHeaderView *)[self.view viewWithTag:10001];
+    obj.buy_in = obj.price;
+    obj.buy_out = obj.price;
+    
+    [headerViewCell upDataHeaderPrice:obj];
+    
+    [self.buyView addCode:self.code code_cn:self.titler prcieIn:obj.buy_in priceOut:obj.buy_out];
+    
+    self.stockDish.buy = obj.price;
+    self.stockDish.code = _code;
+    self.stockDish.excode = _excode;
+    self.stockDish.isClosed = @"0";
+    self.stockDish.lastclose= self.buyModel.close;
+    self.stockDish.low = self.buyModel.minPrice;
+    self.stockDish.updown = @"99";
+    self.stockDish.updownrate= @"2";
+    self.stockDish.name = self.buyModel.symbolName;
+    self.stockDish.open = self.buyModel.open;
+    self.stockDish.sell = obj.price;
+    self.stockDish.time = obj.timeStr;
+    self.stockDish.time = @"2019-02-11 13:00:00";
+    self.stockDish.high = self.buyModel.maxPrice;
+    
+//            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//            [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+//    
+//            NSDate *datenow = [NSDate date];
+//            NSString *currentTimeString = [formatter stringFromDate:datenow];
+//            self.stockDish.quotetime = [NSNumber numberWithInteger:[obj.timeStr integerValue]];
+    self.stockDish.quotetime = obj.marketTime.time;
+
+    self.stockDish.quotetime = [NSNumber numberWithFloat:[obj.marketTime.time integerValue] / 1000.0];
+    
+    if (obj.marketTime.time == 0) {
+        return;
+    }
+//            [_stockDish dataWithProductDic:dic];
+//        }
+    
+    [self.headerview startAnimation];
+    if (_type.length<=0) {
+        //    [self updateHeaderView:YES];
+//        [self updateMinuteViewForSocket];//拼接分时数据
+
+        if (_minutemodel.prices.count!=0)//没有价格就重新请求分时数据
+        {
+            [self updateMinuteViewForSocket];//拼接分时数据
+        }
+    }
+    else{
+        [self updateDaysViewForSocket];//拼接K线数据
+
+        //   [self updateHeaderView:NO];
+        if (_model.prices.count != 0)
+        {
+            [self updateDaysViewForSocket];//拼接K线数据
+        }
+    }
+}
 
 //通知：成功接收到行情
 - (void)updateQuotations:(NSNotification *)obj {
@@ -484,11 +676,11 @@ static BOOL firstFlag = YES;
             if (!_stockDish && ![dic isNull]) {
                 return;
             }
-            NSString *low=[dic stringFoKey:@"low"];//最低
-            NSString *high=[dic stringFoKey:@"top"];//最高
-            NSString *open=[dic stringFoKey:@"open"];//今开
-            NSString *close=[dic stringFoKey:@"last_close"];//昨收
-            NSString *sell=[dic stringFoKey:@"sell"];//当前价位
+            NSString *low = [dic stringFoKey:@"low"];//最低
+            NSString *high = [dic stringFoKey:@"top"];//最高
+            NSString *open = [dic stringFoKey:@"open"];//今开
+            NSString *close = [dic stringFoKey:@"last_close"];//昨收
+            NSString *sell = [dic stringFoKey:@"sell"];//当前价位
             
             BOOL lowflag = !notemptyStr(low);
             BOOL highflag = !notemptyStr(high);
@@ -508,22 +700,25 @@ static BOOL firstFlag = YES;
             [_stockDish dataWithProductDic:dic];
         }
     }
+    
     [self.headerview startAnimation];
+    
     if (_type.length<=0) {
     //    [self updateHeaderView:YES];
-        if (_minutemodel.prices.count!=0)//没有价格就重新请求分时数据
+        if (_minutemodel.prices.count != 0)//没有价格就重新请求分时数据
         {
             [self updateMinuteViewForSocket];//拼接分时数据
         }
     }
     else{
      //   [self updateHeaderView:NO];
-        if (_model.prices.count!=0)
+        if (_model.prices.count !=0 )
         {
             [self updateDaysViewForSocket];//拼接K线数据
         }
     }
 }
+
 //长连接通知：获取行情失败
 - (void)updateQuotationsError:(NSNotification *)obj {
     NSArray *arr = obj.object;
@@ -771,7 +966,7 @@ static BOOL firstFlag = YES;
         UD_SetObjForKey(@"0", key);
     }
     
-    }
+}
 
 #pragma mark - tableDlegate
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -879,7 +1074,7 @@ static BOOL firstFlag = YES;
         _buyView.code = self.code;
         _buyView.code_cn = self.code_cn;
         _buyView.stops_level = self.stops_level;
-        _buyView.dataly = self.digit;
+        _buyView.dataly = self.buyModel.entryOrders.length > 2 ? self.buyModel.entryOrders.length - 2 : 2;
         _buyView.closePrice = self.close;
         _buyView.change = self.change;
         [self.view addSubview:_buyView];
@@ -937,7 +1132,6 @@ static BOOL firstFlag = YES;
         
         WS(ws);
         [self.sellProductView setShutView:^(ExchangeType exType) {
-            [ws canclePollingHoldList];
         }];
         
         [self.sellProductView setSellFinish:^(NSString *msg,NSString *code) {
@@ -956,26 +1150,8 @@ static BOOL firstFlag = YES;
     [self.sellProductView showView:YES];
     
     if (self.holdList.count > 0) {
-        [self pollingHoldList];
     } else {
         [self.footerview changeThirdBtnWithText:@"暂无持仓"];
-    }
-}
-
-//持仓轮询
-- (void)pollingHoldList {
-    [self canclePollingHoldList];
-    NSLog(@"持仓轮询开启11111111111");
-    self.holdListTimer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(loadHoldDatasPolling) userInfo:nil repeats:YES];
-}
-
-//取消持仓轮询
-- (void)canclePollingHoldList {
-    if (self.holdListTimer) {
-        NSLog(@"持仓轮询关闭000000000");
-        [self.holdListTimer setFireDate:[NSDate distantFuture]];
-        [self.holdListTimer invalidate];
-        self.holdListTimer = nil;
     }
 }
 
@@ -1014,6 +1190,13 @@ static BOOL firstFlag = YES;
         self.warningView.content = @"";
         self.warningView.imgName = @"";
     }
+}
+
+- (QuotationDetailModel *)stockDish{
+    if (!_stockDish) {
+        _stockDish = [[QuotationDetailModel alloc] init];
+    }
+    return _stockDish;
 }
 
 -(void)dealloc{

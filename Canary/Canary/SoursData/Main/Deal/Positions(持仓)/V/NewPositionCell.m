@@ -209,25 +209,26 @@
 - (void)setModel:(postionModel *)model{
     
     // 获取本地的行情数据
-     NSMutableArray  * markArray =[NSMutableArray arrayWithArray:[DataHundel shareDataHundle].marketArrat];
-    NSInteger numder = 0;
-    if (markArray.count > 0 ) {
-        for (MarketModel * marketModel in markArray) {
-            if ([marketModel.symbol isEqualToString:model.symbol]) {
-//                self.sycnLabel.text = marketModel.symbol_cn;
-                 self.nameLadel.text = marketModel.symbol_cn;
-                numder = marketModel.digit;
-            }
-        }
-    }
+//     NSMutableArray  * markArray = [NSMutableArray arrayWithArray:[DataHundel shareDataHundle].marketArrat];
+//    NSInteger numder = 0;
+//    if (markArray.count > 0 ) {
+//        for (MarketModel * marketModel in markArray) {
+//            if ([marketModel.symbol isEqualToString:model.symbol]) {
+//                 self.nameLadel.text = marketModel.symbol_cn;
+//                numder = marketModel.digit;
+//            }
+//        }
+//    }
    
-    
+    self.nameLadel.text = model.symbolName;
+    NSDecimalNumber *unitPrice = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", model.unitPrice]];
+
     NSString * string = @"建仓价";
-    NSString * string1= model.open_price;
-    CGFloat  profit = [model.profit floatValue];
+    NSString * string1= [NSString stringWithFormat:@"%@",unitPrice];
+    CGFloat  profit = model.profit;
    
-    NSString * string2= [NSString stringWithFormat:@"(%@$)",[self formatNumber:profit withPointDigits:numder]];
-    NSString * string4= [NSString stringWithFormat:@"%@%@%@",string,string1,string2];
+    NSString *string2 = [NSString stringWithFormat:@"(%@$)",[self formatNumber:profit withPointDigits:2]];
+    NSString *string4 = [NSString stringWithFormat:@"%@%@%@",string,string1,string2];
     // 创建Attributed
     NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:string4];
     // 需要改变的第一个文字的位置
@@ -255,18 +256,22 @@
     
     // 为label添加Attributed
     [self.priceLadel setAttributedText:noteStr];
-    self.timeLadel.text = [DataHundel convertime:model.open_time];
+//    self.timeLadel.text = [DataHundel convertime:model.createTime];
+    self.timeLadel.text = model.createTime;
 //    self.priceLadel.text = [NSString stringWithFormat:@"%@%@(%@)",@"建仓价",model.open_price,model.profit];
     // 判断建仓类型
     self.typeStr = model.cmd;
-    if ([_typeStr isEqualToString:@"BUY"] || [_typeStr isEqualToString:@"SELL"]) {
+    
+    NSInteger transactionStatus = model.transactionStatus;
+    
+    if (transactionStatus == 1) {
         // 市价单赋值预留
         self.typeLadel.text = @"市价单";
         self.String = @"CLOSE";
         [self.unwindButton setTitle:@"平仓" forState:UIControlStateNormal];
         
         // 判断是否买涨还是买跌Ladel 赋值预留
-        if ([_typeStr isEqualToString:@"BUY"]) {
+        if (model.ransactionType == 1) {
             self.zhangFuLadel.text =[NSString stringWithFormat:@"%@", @"买涨"];
             self.increaseImage.image = [UIImage imageNamed:@"rose"];
 //            self.rangLabel.textColor = LTRedColor;
@@ -283,7 +288,7 @@
         [self.unwindButton setTitle:@"撤销" forState:UIControlStateNormal];
 
         // 判断是否买涨还是买跌Ladel 赋值预留
-        if ([_typeStr isEqualToString:@"BUY_LIMIT"] ||[_typeStr isEqualToString:@"BUY_STOP"] ) {
+        if (model.ransactionType == 1) {
             self.zhangFuLadel.text =[NSString stringWithFormat:@"%@", @"买涨"];
             self.increaseImage.image = [UIImage imageNamed:@"rose"];
 //            self.rangLabel.textColor = LTRedColor;
@@ -296,13 +301,13 @@
     }
     
     self.viewOne.titleString = @"止盈";
-    self.viewOne.parameterString = model.tp;
+    self.viewOne.parameterString = model.stopProfitExponent;
     self.viewTwo.titleString = @"止损";
-    self.viewTwo.parameterString = model.sl;
+    self.viewTwo.parameterString = model.stopLossExponent;
     self.viewThree.titleString = @"手数";
-    self.viewThree.parameterString = model.volume;
-    self.viewFour.titleString = @"手数";
-    self.viewFour.parameterString = model.ticket;
+    self.viewThree.parameterString = [NSString stringWithFormat:@"%ld",model.lot];
+    self.viewFour.titleString = @"订单号";
+    self.viewFour.parameterString = @"";
     
 }
 

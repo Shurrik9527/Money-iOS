@@ -106,6 +106,7 @@
 #define NFC_PushProductList @"NFC_PushProductList"
 #define NFC_PushRecharge @"NFC_PushRecharge"
 #define NFC_ReloadHold @"NFC_ReloadHold"//唤醒持仓
+#define NFC_ReloadProfit @"NFC_ReloadProfit"                       //刷新i盈利
 
 #define NFC_RechargeSuccess @"NFC_RechargeSuccess"
 #define NFC_ChangeToProductListView @"NFC_ChangeToProductListView"

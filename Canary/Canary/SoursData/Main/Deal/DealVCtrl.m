@@ -70,12 +70,14 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    NSLog(@"进入页面");
 }
 
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-    
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    NSLog(@"离开页面");
 }
+
 #pragma mark - DealHead
 
 - (void)createHead {
@@ -89,8 +91,9 @@
 }
 #pragma mark - NavBar
 - (void)configNavBar {
-    [self navTitle:@"交易" backType:BackType_Non rightImgName:@"live_btn_service"];
-    [self addLeftImageBtn:@"navIcon_tip"];
+//    [self navTitle:@"交易" backType:BackType_Non rightImgName:@"live_btn_service"];
+    [self navTitle:@"交易"];
+//    [self addLeftImageBtn:@"navIcon_tip"];
 }
 
 - (void)leftAction {
@@ -101,8 +104,9 @@
 static CGFloat segmentViewH = 40;
 
 - (void)createSegmentView {
-    NSArray * arr = @[@"买卖",@"持仓",@"挂单",@"资金"];
-    
+    NSArray * arr = @[@"持仓",@"资金"];
+//    NSArray * arr = @[@"买卖",@"持仓",@"挂单",@"资金"];
+
     self.segment =[[HMSegmentedControl alloc]initWithSectionTitles:arr];
     self.segment.frame =  CGRectMake(0, _dealHead.yh_, self.w_, segmentViewH);
     self.segment.selectionIndicatorHeight =3.0f;
@@ -121,37 +125,36 @@ static CGFloat segmentViewH = 40;
     CGFloat y = self.segment.yh_;
     CGFloat h = ScreenH_Lit - y - TabBarH_Lit ;
     CGRect frame = CGRectMake(0, y, self.w_, h);
-    NSLog(@"height === %.2f",h);
     _superScrollView =[[UIScrollView alloc]initWithFrame:frame];
     _superScrollView.delegate = self;
     _superScrollView.showsHorizontalScrollIndicator = NO;
     [_superScrollView setPagingEnabled:YES];
     _superScrollView.userInteractionEnabled = YES;
-    [_superScrollView setContentSize:CGSizeMake(Screen_width*2,h)];
+    [_superScrollView setContentSize:CGSizeMake(Screen_width * 2,h)];
     _superScrollView.contentOffset = CGPointMake(0, 0);
     [self.view addSubview:_superScrollView];
     
     // 买卖
-    self.buyingSellingVC =[[BuyingSellingVC alloc]init];
-    self.buyingSellingVC.view.frame = CGRectMake(0, 0, Screen_width, h);
-    [self addChildViewController:self.buyingSellingVC];
-    [self.superScrollView addSubview:self.buyingSellingVC.view];
+//    self.buyingSellingVC =[[BuyingSellingVC alloc]init];
+//    self.buyingSellingVC.view.frame = CGRectMake(0, 0, Screen_width, h);
+//    [self addChildViewController:self.buyingSellingVC];
+//    [self.superScrollView addSubview:self.buyingSellingVC.view];
     
     // 持仓
     self.positionVC =[[PositionsVC alloc]init];
-    self.positionVC.view.frame = CGRectMake(Screen_width, 0, Screen_width, h);
+    self.positionVC.view.frame = CGRectMake(Screen_width * 0, 0, Screen_width, h);
     [self addChildViewController:self.positionVC];
     [self.superScrollView addSubview:self.positionVC.view];
     
     // 挂单
-    self.putupVC =[[PutupVC alloc]init];
-    self.putupVC.view.frame = CGRectMake(Screen_width * 2 ,0, Screen_width,h);
-    [self addChildViewController:self.putupVC];
-    [self.superScrollView addSubview:self.putupVC.view];
+//    self.putupVC =[[PutupVC alloc]init];
+//    self.putupVC.view.frame = CGRectMake(Screen_width * 2 ,0, Screen_width,h);
+//    [self addChildViewController:self.putupVC];
+//    [self.superScrollView addSubview:self.putupVC.view];
     
     // 资金
     self.capitalVC =[[CapitalVC alloc]init];
-    self.capitalVC.view.frame = CGRectMake(Screen_width * 3 ,0, Screen_width,h);
+    self.capitalVC.view.frame = CGRectMake(Screen_width * 1,0, Screen_width,h);
     [self addChildViewController:self.capitalVC];
     [self.superScrollView addSubview:self.capitalVC.view];
 

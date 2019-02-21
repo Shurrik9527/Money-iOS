@@ -156,7 +156,7 @@
     // 创建计算线程
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
         //NSLog(@"start operation");
-        if (ws.model.type>0)
+        if (ws.model.type > 0)
         {
             NSLog(@"create Calculation");
             //计算K线
@@ -167,7 +167,7 @@
                                       ws.model = m;
                                       // 更新界面
                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                          if (_model.prices.count>0) {
+                                          if (ws.model.prices.count>0) {
                                               [ws createViews];
                                           }
                                       });

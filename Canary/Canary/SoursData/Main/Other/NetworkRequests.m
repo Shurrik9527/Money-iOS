@@ -67,7 +67,9 @@ static NetworkRequests *httpRequest = nil;
     [manager.requestSerializer setValue:[NSString stringWithFormat:@"%@%@",@"Bearer ",ktoken] forHTTPHeaderField:@"Authorization"];
     [manager POST:URLString parameters:dict progress:^(NSProgress * _Nonnull uploadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
+//        NSLog(@"请求到的  %@",responseObject);
+
+
         succeed(responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         failure(error);
@@ -89,10 +91,11 @@ static NetworkRequests *httpRequest = nil;
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
 
         if(responseObject){
-            //NSLog(@"请求到的  %@",responseObject);
-            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
-            
-            success(dict[@"data"],[dict[@"msgCode"] integerValue] ? NO : YES,dict[@"msg"]);
+//            NSLog(@"请求到的  %@",responseObject);
+//            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
+            success(responseObject[@"data"],[responseObject[@"msgCode"] integerValue] ? NO : YES,responseObject[@"msg"]);
+
+//            success(dict[@"data"],[dict[@"msgCode"] integerValue] ? NO : YES,dict[@"msg"]);
         } else {
             success(@"",NO,@"暂无数据");
         }
@@ -104,28 +107,51 @@ static NetworkRequests *httpRequest = nil;
 
 - (void)SWDPOST:(NSString *)URLString dict:(id)dict succeed:(NetworkSuccess)success failure:(void (^)(NSError *error))failure
 {
-    NSString * ktoken = [NSUserDefaults objFoKey:kToken];
+    
+    
     NSURL *url = [NSURL URLWithString:BaseUrl];
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:url sessionConfiguration:config];
     manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", nil];
-    [manager.requestSerializer setValue:[NSString stringWithFormat:@"%@",ktoken]forHTTPHeaderField:@"Authorization"];
+    NSString * ktoken = [NSUserDefaults objFoKey:kToken];
+
+    [manager.requestSerializer setValue:[NSString stringWithFormat:@"%@",ktoken] forHTTPHeaderField:@"Authorization"];
+    NSLog(@"dict === %@",dict);
     [manager POST:URLString parameters:dict progress:^(NSProgress * _Nonnull uploadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-        if(responseObject){
-            //NSLog(@"请求到的  %@",responseObject);
-            NSDictionary *dict = responseObject;
 
-//            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
-            
-            success(dict[@"data"],[dict[@"msgCode"] integerValue] ? NO : YES,dict[@"msg"]);
-            
-        } else {
-            success(@"",NO,@"暂无数据");
-        }
-        
+
+            if (responseObject) {
+//                NSLog(@"请求到的  %@",responseObject);
+
+                NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
+                NSDictionary *allHeaders = response.allHeaderFields;
+
+                NSString *Authorization = allHeaders[@"Authorization"];
+
+                if (Authorization && Authorization.length) {
+                    [NSUserDefaults setObj:Authorization foKey:kToken];
+                }
+
+                if ([responseObject isKindOfClass:[NSArray class]]) {
+                    NSLog(@"这是个数组 === %@",responseObject);
+                    success(@"", NO,@"");
+
+                }else{
+                    success(responseObject[@"data"],[responseObject[@"msgCode"] integerValue] ==  0 ? YES : NO,responseObject[@"msg"]);
+                }
+                
+//                success(responseObject[@"data"],[responseObject[@"msgCode"] integerValue] ==  0 ? YES : NO,responseObject[@"msg"]);
+
+//                success(dict[@"data"],[dict[@"msgCode"] integerValue] ==  0 ? YES : NO,dict[@"msg"]);
+
+            }else{
+                success(@"", NO,@"");
+
+            }
+
+
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         failure(error);
     }];
@@ -145,7 +171,7 @@ static NetworkRequests *httpRequest = nil;
         
         NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
         NSDictionary *allHeaders = response.allHeaderFields;
-        NSLog(@"响应--\n响应头--%@",allHeaders);
+//        NSLog(@"响应--\n响应头--%@",allHeaders);
         
         NSString *Authorization = allHeaders[@"Authorization"];
         

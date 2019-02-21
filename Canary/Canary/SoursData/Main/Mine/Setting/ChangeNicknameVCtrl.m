@@ -67,20 +67,25 @@
         return;
     }
     [self showLoadingView];
-    NSString * url =[NSString stringWithFormat:@"%@%@",BasisUrl,@"/changeNickname"];
+    NSString * url =[NSString stringWithFormat:@"%@%@",BaseUrl,@"/user/edit"];
     NSDictionary * dic = @{@"nickname":nickName};
-    [[NetworkRequests sharedInstance]POST:url dict:dic succeed:^(id data) {
-        [self hideLoadingView];
-        if ([[data objectForKey:@"code"]integerValue] == 0 ) {
+    
+    [[NetworkRequests sharedInstance] SWDPOST:url dict:dic succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
+        
+        if (isSuccess) {
+            NSLog(@"%@",nickName);
             [NSUserDefaults setObj:nickName foKey:kNickName];
-        }else
-        {
-        [LTAlertView alertMessage:[DataHundel messageObjetCode:[[data objectForKey:@"code"]integerValue]]];
+            [self popVC];
+            
+        }else{
+            [LTAlertView alertMessage:message];
         }
+        
     } failure:^(NSError *error) {
-        [self hideLoadingView];
-
+        
+        
     }];
+    
     
 }
 

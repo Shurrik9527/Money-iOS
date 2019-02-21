@@ -38,7 +38,7 @@
     self.backgroundColor = [UIColor whiteColor];
     
     float x = 16;
-    float w = (Screen_width)/4.0;
+    float w = (Screen_width)/3.0;
     float y = 10;
     float h = kCellFontSize;
     // 名称
@@ -63,7 +63,7 @@
     
     // 买入价
     if (!_price) {
-        _price = [[UILabel alloc] initWithFrame:CGRectMake(w, y+6, 0.26*Screen_width, h)];
+        _price = [[UILabel alloc] initWithFrame:CGRectMake(w, y+6, w, h)];
         _price.font = autoFontSiz(kCellPriceFontSize);
         _price.textColor = LTTitleRGB;
         _price.backgroundColor = LTClearColor;
@@ -72,15 +72,15 @@
     }
 
     // 卖出价
-    if (!_weipanId) {
-        _weipanId = [[UILabel alloc] initWithFrame:CGRectMake(w *2, y+6, w, h)];
-        _weipanId.font = autoFontSiz(kCellPriceFontSize);
-        _weipanId.textColor = LTTitleRGB;
-        _weipanId.backgroundColor = LTClearColor;
-        _weipanId.textAlignment = NSTextAlignmentCenter;
-        [self.contentView addSubview:_weipanId];
-    
-    }
+//    if (!_weipanId) {
+//        _weipanId = [[UILabel alloc] initWithFrame:CGRectMake(w *2, y+6, w, h)];
+//        _weipanId.font = autoFontSiz(kCellPriceFontSize);
+//        _weipanId.textColor = LTTitleRGB;
+//        _weipanId.backgroundColor = LTClearColor;
+//        _weipanId.textAlignment = NSTextAlignmentCenter;
+//        [self.contentView addSubview:_weipanId];
+//
+//    }
     
     if (!_change) {
         CGFloat h = 28;
@@ -97,25 +97,53 @@
 
     }
 }
+
 -(void)updateCellContent:(MarketModel *)model
 {
-    if ( self && model)
+    if (self && model)
     {
-        if (notemptyStr(model.symbol )&& notemptyStr(model.buy_out) && notemptyStr(model.buy_in)) {
+        if (notemptyStr(model.symbol)&& notemptyStr(model.buy_out) && notemptyStr(model.buy_in)) {
         NSUInteger decimals =[model digit];
         NSString * percentage =[NSString stringWithFormat:@"%@%@%@",@"%0.",[NSString stringWithFormat:@"%ld",decimals],@"f"];
         _price.text =[NSString stringWithFormat:percentage,model.buy_in.doubleValue];
-        _weipanId.text = [NSString stringWithFormat:percentage,model.buy_out.doubleValue];
+//        _weipanId.text = [NSString stringWithFormat:percentage,model.buy_out.doubleValue];
             //如果是1就是非选中状态
-            if (model.isAllSelect == 1) {
+//            if (model.isAllSelect == 1) {
                 [self changeBgColorWithOldPrice:model.buy_in code:model.symbol yesClosePrice:model.close];
-            }else
-            {
-                [self calculate_Spread:model.buy_in and:model.buy_out isSelect:model.isAllSelect digit:model.digit];
-            }
+//            }else
+//            {
+//                [self calculate_Spread:model.buy_in and:model.buy_out isSelect:model.isAllSelect digit:model.digit];
+//            }
     }
     }
 }
+
+-(void)updateCellContent1:(BuySellingModel *)model
+{
+    if (self && model)
+    {
+        
+        if (model.price.length == 0) {
+            model.price = model.close;
+        }
+        
+        NSUInteger decimals = model.entryOrders.length > 2 ? model.entryOrders.length - 2 : model.entryOrders.length;
+        
+        NSString * percentage =[NSString stringWithFormat:@"%@%@%@",@"%0.",[NSString stringWithFormat:@"%ld",decimals],@"f"];
+        
+        _price.text =[NSString stringWithFormat:percentage,model.price.doubleValue];
+            //        _weipanId.text = [NSString stringWithFormat:percentage,model.buy_out.doubleValue];
+            //如果是1就是非选中状态
+            //            if (model.isAllSelect == 1) {
+            [self changeBgColorWithOldPrice:model.price code:model.symbolCode yesClosePrice:model.close];
+            //            }else
+            //            {
+            //                [self calculate_Spread:model.buy_in and:model.buy_out isSelect:model.isAllSelect digit:model.digit];
+            //            }
+    }
+}
+
+
 //计算点差
 -(void)calculate_Spread:(NSString*)buyIN and:(NSString *)buyOut isSelect:(NSInteger)isSelect digit:(NSInteger )digit
 {
@@ -157,18 +185,18 @@
 
         if ([chang floatValue]>0) {
             _price.textColor = LTKLineRed;
-            _weipanId.textColor = LTKLineRed;
+//            _weipanId.textColor = LTKLineRed;
         }
         if ([chang floatValue]<0) {
             _price.textColor = LTKLineGreen;
-            _weipanId.textColor = LTKLineGreen;
+//            _weipanId.textColor = LTKLineGreen;
         }
     }else if (isSelect == 1)
     {
     if ([chang floatValue]>0) {
         [_change setBackgroundImage:[UIImage imageWithColor:LTKLineRed size:CGSizeMake(_change.frame.size.width, _change.frame.size.height)] forState:UIControlStateNormal];
         _price.textColor = LTKLineRed;
-        _weipanId.textColor = LTKLineRed;
+//        _weipanId.textColor = LTKLineRed;
     }
 
     if ([chang floatValue]==0) {
@@ -178,7 +206,7 @@
     if ([chang floatValue]<0) {
         [_change setBackgroundImage:[UIImage imageWithColor:LTKLineGreen size:CGSizeMake(_change.frame.size.width, _change.frame.size.height)] forState:UIControlStateNormal];
         _price.textColor = LTKLineGreen;
-        _weipanId.textColor = LTKLineGreen;
+//        _weipanId.textColor = LTKLineGreen;
     }
     }
 }

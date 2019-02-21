@@ -13,7 +13,8 @@
 
 #ifdef DEBUG
 
-    #define NSLog(...) NSLog(__VA_ARGS__)
+    #define NSLog(FORMAT, ...) fprintf(stderr,"[%s:%d行] %s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
+
     #define DLog( s, ... ) NSLog( @"< %@:(%d) > %@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
 
 #else
@@ -65,6 +66,9 @@
 #define Lit_iphone6W       375.0
 #define Lit_iphone6H       667.0
 
+#define NavBarHeight                        self.navigationController.navigationBar.bounds.size.height
+#define TabBarHeight                        self.tabBarController.tabBar.bounds.size.height
+#define StateBarHeight                        [[UIApplication sharedApplication] statusBarFrame].size.height
 
 
 

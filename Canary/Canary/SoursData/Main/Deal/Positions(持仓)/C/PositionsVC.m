@@ -15,10 +15,14 @@
 #import "SocketModel.h"
 #import "MJRefresh.h"
 #import "DataHundel.h"
+#import "JWTHundel.h"
 @interface PositionsVC ()<UITableViewDelegate,UITableViewDataSource,SHFenleiCellDelegate>
+
 @property (nonatomic,strong)UITableView * tableView;
-@property(nonatomic,strong)NSMutableArray * dataArray;
-//@property (nonatomic,strong)NewPositionCell * postionCell;
+@property (nonatomic,strong)NSMutableArray * dataArray;
+
+@property (nonatomic, strong)NSTimer *timer;
+
 @end
 
 @implementation PositionsVC
@@ -30,10 +34,45 @@
     [Center addObserver:self selector:@selector(NotificationCenterCommunication:) name:NFC_LocLogin object:nil];
     // UITableView初始化
     [self creatTableViewHeader:YES];
-    [self getRequsetType:YES];
-    //[self updatasocket];
+    [self getRequsetType];
+    
+    
+    
 }
--(void)creatTableViewHeader:(BOOL)hbl
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self getRequsetType];
+    [self createTimer];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self removeTimer];
+}
+
+- (void)createTimer{
+    
+    if (!self.timer) {
+        
+        self.timer = [NSTimer timerWithTimeInterval:10 target:self selector:@selector(getRequsetType) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
+        
+    }
+    
+}
+
+- (void)removeTimer{
+    
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+    
+}
+
+- (void)creatTableViewHeader:(BOOL)hbl
 {
     self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, Screen_width, self.h_ - 158) style:(UITableViewStylePlain)];
     self.tableView.delegate = self;
@@ -44,7 +83,7 @@
     
     WS(ws);
     [self.tableView addLegendHeaderWithRefreshingBlock:^{
-        [ws getRequsetType:YES];
+        [ws getRequsetType];
     }];
 }
 
@@ -60,7 +99,6 @@
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"数据源打印:%@ 现在数量:%ld",self.dataArray,self.dataArray.count);
     return self.dataArray.count;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -78,7 +116,7 @@
     postionModel * model =[self.dataArray objectAtIndex:indexPath.row];
     _postionCell.model = model;
     _postionCell.delegate = self;
-    _postionCell.index = 10000+indexPath.row;
+    _postionCell.index = 10000 + indexPath.row;
     _postionCell.goodsViewTouchBlock = ^(UIButton *button, NSInteger index, NSString *type) {
         [self PingChangNetWorkatIndex:index type:type RowIndex:indexPath];
     };
@@ -96,20 +134,25 @@
         
         NSInteger numder = index - 10000;
         postionModel * model =[self.dataArray objectAtIndex:numder];
-        NSInteger a =model.volume.doubleValue * 100;
-        NSString * vlume =[NSString stringWithFormat:@"%ld",a];
-        NSDictionary * dic = @{
-                               @"server":[NSUserDefaults objFoKey:TYPE],
-                               @"mt4id":[NSUserDefaults objFoKey:MT4ID],
-                               @"type":type,
-                               @"ticket":model.ticket,
-                               @"symbol":model.symbol,
-                               @"volume":vlume,
-                               @"sl":model.sl,
-                               @"tp":model.tp,
-                               @"price":@(0),
-                               @"expiredDate":@""
-                               };
+        
+        NSMutableDictionary * dic = [@{
+                               @"loginName":[NSUserDefaults objFoKey:@"loginName"],
+                               @"transactionStatus":@(2),
+                               @"symbolCode":model.symbolCode,
+                               @"ransactionType":@(model.ransactionType),
+                               @"unitPrice":@(model.unitPrice),
+                               @"lot":@(model.lot),
+                               @"id":@([model.id integerValue]),
+                               } mutableCopy];
+        NSLog(@"dic === %@",dic);
+        NSString *sign = [NSString stringWithFormat:@"id:%@,loginName:%@,lot:%@,ransactionType:%@,symbolCode:%@,transactionStatus:2,unitPrice:%@,url:/transaction/sell",model.id,[NSUserDefaults objFoKey:@"loginName"],@(model.lot),@(model.ransactionType),model.symbolCode,@(model.unitPrice)];
+        NSLog(@"json === %@",sign);
+
+        
+        sign = [[JWTHundel shareHundle] getRSAKEY:sign];
+        
+        [dic setObject:sign forKey:@"sign"];
+        
         [self netWork:dic CellNumder:row];
         
     }];
@@ -131,64 +174,105 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
--(void)getRequsetType:(BOOL)type
+-(void)getRequsetType
 {
-    if (notemptyStr([NSUserDefaults objFoKey:MT4ID])) {
-    NSString * stringUrl =[NSString stringWithFormat:@"%@%@",BasisUrl,@"/trading/orders"];
-    NSDictionary * dic = @{@"server":[NSUserDefaults objFoKey:TYPE],@"mt4id":[NSUserDefaults objFoKey:MT4ID]};
+    
+    if (![LTUser hasLogin]) {
+        return;
+    }
+    
+    NSString * stringUrl =[NSString stringWithFormat:@"%@%@",BaseUrl,@"/transactionRecord/getList"];
+    
+    NSDictionary * dic = @{@"loginName":[NSUserDefaults objFoKey:@"loginName"],@"transactionStatus":@(1)};
+    
+    [[NetworkRequests sharedInstance] SWDPOST:stringUrl dict:dic succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
         
-    [[NetworkRequests sharedInstance]GET:stringUrl dict:dic succeed:^(id data) {
-        
-        if ([[data objectForKey:@"code"]integerValue] == 0) {
-            NSLog(@"持仓数据打印%@", data);
-            
-            if (type == YES) {
-                // 刷新
-                if (self.dataArray.count > 0) {
-                    [self.dataArray removeAllObjects];
-                    self.dataArray =[postionModel mj_objectArrayWithKeyValuesArray:[data objectForKey:@"dataObject"]];
-                }else{
-                    self.dataArray =[postionModel mj_objectArrayWithKeyValuesArray:[data objectForKey:@"dataObject"]];
-                }
+        NSLog(@"res == %@",resonseObj);
+        if (isSuccess) {
+
+                self.dataArray = [postionModel mj_objectArrayWithKeyValuesArray:resonseObj[@"list"]];
+                
+            CGFloat totalProfit = 0;
+            CGFloat totalPosition = 0;
+
+                for (postionModel *model in self.dataArray) {
+                    
+                    if (model.ransactionType == 1) {
+                        //买涨
+
+                        CGFloat profit = model.presentPrice / model.exponent * model.unitPrice * model.lot;
+
+                        if (profit - model.unitPrice * model.lot < 0) {
+                            model.profit = (profit - model.unitPrice * model.lot) * -1;
+                        }else{
+                            model.profit = profit - model.unitPrice * model.lot;
+                        }
+                        totalProfit += model.profit;
+                        totalPosition += profit;
+                    }else{
+                        CGFloat profit = model.presentPrice / model.exponent * model.unitPrice * model.lot;
+                        if (profit - model.unitPrice * model.lot > 0) {
+                            model.profit = (profit - model.unitPrice * model.lot) * -1;
+                        }else{
+                            model.profit = profit - model.unitPrice * model.lot;
+                        }
+                        totalProfit += model.profit;
+                        totalPosition += profit;
+
+                    }
+                    
+                
+                NSLog(@"proft === %f",totalProfit);
+                    
+                [[NSNotificationCenter defaultCenter] postNotificationName:NFC_ReloadProfit  object:@{@"profit":@(totalProfit),@"position":@(totalPosition)}];
+
+                
+                
             }
             [self.tableView reloadData];
+        }else{
+            
         }
         [self.tableView.header endRefreshing];
+
     } failure:^(NSError *error) {
         [self.tableView.header endRefreshing];
+        
+        
     }];
-    }
+    
+//    }
 }
 -(void)netWork :(NSDictionary *)dic CellNumder:(NSIndexPath *)numder
 {
-    NSString * urlString = [NSString stringWithFormat:@"%@%@",BasisUrl,@"/trading/execute"];
-    
-    [[NetworkRequests sharedInstance]POST:urlString dict:dic succeed:^(id data) {
-        
-//        NSLog(@"平仓网络请求:%@",data);
-        if ([[data objectForKey:@"code"]integerValue] == 0) {
+    NSString * urlString = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/transaction/sell"];
+    WS(ws)
+    [[NetworkRequests sharedInstance] SWDPOST:urlString dict:dic succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
+        NSLog(@"res ===== %@",resonseObj);
+        if (resonseObj) {
             
-            WS(ws)
+         
             [self.view showTip:@"平仓成功"];
             [ws.dataArray removeObjectAtIndex:numder.row];
-            if (self.dataArray.count == 0) { // 要根据情况直接删除section或者仅仅删除row
-             //   [ws.tableView deleteSections:[NSIndexSet indexSetWithIndex:numder.section] withRowAnimation:UITableViewRowAnimationFade];
-            } else {
-                [ws.tableView deleteRowsAtIndexPaths:@[numder] withRowAnimation:UITableViewRowAnimationFade];
-            }
+
+            [ws.tableView deleteRowsAtIndexPaths:@[numder] withRowAnimation:UITableViewRowAnimationFade];
+
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self getRequsetType:YES];
-            });
-        }else
-        {
-            [LTAlertView alertMessage:[DataHundel messageObjetCode:[[data objectForKey:@"code"]integerValue]]];
+            
+        }else{
+            
+            [ws.view showTip:message];
+            
         }
+        
     } failure:^(NSError *error) {
-        NSLog(@"平仓网络请求错误:%@",error);
+        
     }];
     
+
+    
 }
+
 //-(void)updatasocket
 //{
 //    [[AsSocket shareDataAsSocket]setReturnValueBlock:^(NSMutableArray *socketArray) {
@@ -205,6 +289,7 @@
 //            }
 //        }    }];
 //}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -213,7 +298,7 @@
 /** 通知回调*/
 - (void)NotificationCenterCommunication:(NSNotification*)sender{
     NSLog(@"调用了");
-    [self getRequsetType:YES];
+    [self getRequsetType];
 }
 
 /** 注销通知*/

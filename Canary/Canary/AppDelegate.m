@@ -20,6 +20,7 @@
 #import "NTESCustomAttachmentDecoder.h"
 #import "PopRemind.h"
 #import "PopDealMsgV.h"
+#import "JWTHundel.h"
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate>
 
@@ -41,21 +42,20 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     [LTUser reqStartup];
-    
+    [[JWTHundel shareHundle] createLogin];
     [self defaultValueConfig];//默认值配置
-    [self printAppConfiguration];
     
-    [self configUMeng];
-    [self configPush];
-    [self configShare];
-    [self configGT];
+//    [self configUMeng];
+//    [self configPush];
+//    [self configShare];
+//    [self configGT];
 //    [self configureNIM];//初始化聊天室
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self configTabBarController:NO];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
-    [self MYTEST];//测试
+//    [self MYTEST];//测试
     
     return YES;
 }
@@ -135,10 +135,7 @@
     [[NTESNotificationCenter sharedCenter] start];
 }
 
-//打印APP参数
-- (void)printAppConfiguration {
-    NSLog(@"");
-}
+
 // 申请通知权限
 - (void)registerAPNs {
     if (kSystemVersion >= 10.0) {
@@ -148,7 +145,7 @@
         center.delegate = self;
         [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionCarPlay) completionHandler:^(BOOL granted, NSError *_Nullable error) {
             if (!error) {
-                NSLog(@"request authorization succeeded!");
+//                NSLog(@"request authorization succeeded!");
             }
         }];
         
@@ -384,7 +381,7 @@
 
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    NSLog(@"Regist fail%@",error);// 一般是系统禁用了推送
+//    NSLog(@"Regist fail%@",error);// 一般是系统禁用了推送
 }
 
 

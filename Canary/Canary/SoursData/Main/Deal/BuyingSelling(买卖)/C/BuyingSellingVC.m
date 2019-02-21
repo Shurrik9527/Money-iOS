@@ -9,8 +9,11 @@
 #import "BuyingSellingVC.h"
 #import "BuyingSellingCell.h"
 #import "GuaDanView.h"
+#import "BuySellingModel.h"
 
 @interface BuyingSellingVC ()
+
+@property (nonatomic, strong)NSMutableArray *dataArray;
 
 @end
 
@@ -29,8 +32,35 @@
 
     [self.tableView registerNib:[UINib nibWithNibName:@"BuyingSellingCell" bundle:nil] forCellReuseIdentifier:NSStringFromClass([BuyingSellingCell class])];
     
-    
+    [self loadData];
     // Do any additional setup after loading the view.
+}
+
+- (void)loadData{
+    
+    NSString * url = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/symbolInfo/getList"];
+    [[NetworkRequests sharedInstance] SWDPOST:url dict:@{@"page":@(self.pageNo),@"pageSize":@(self.pageSize)} succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
+        NSLog(@"res == %@",resonseObj);
+        
+        if (isSuccess) {
+            
+            if (self.pageNo == 0) {
+                [self.dataArray removeAllObjects];
+            }
+            
+            NSArray *array = [BuySellingModel mj_objectArrayWithKeyValuesArray:resonseObj[@"list"]];
+            
+            [self.dataArray addObjectsFromArray:array];
+            
+        }
+        [self endHeadOrFootRef];
+
+    } failure:^(NSError *error) {
+        
+        [self endHeadOrFootRef];
+
+    }];
+    
 }
 
 - (void)showGuaDanView:(BOOL)isGuaDan isDown:(BOOL)isDown{
@@ -76,12 +106,17 @@
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    return 10;
+    return self.dataArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    BuySellingModel *model = self.dataArray[indexPath.row];
+    
     BuyingSellingCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([BuyingSellingCell class]) forIndexPath:indexPath];
+    
+    cell.model = model;
+    
     WS(ws);
     cell.guaDanAction = ^{
         [ws gotoGuaDanAction];
@@ -102,7 +137,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
- 
+    NSLog(@"%@",[tableView indexPathsForVisibleRows]);
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
@@ -111,6 +146,13 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 0;
+}
+
+- (NSMutableArray *)dataArray{
+    if (!_dataArray) {
+        _dataArray = [NSMutableArray array];
+    }
+    return _dataArray;
 }
 
 

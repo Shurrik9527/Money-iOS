@@ -38,7 +38,7 @@
 #import "AddRemind.h"
 #import "PushRemindConfigModel.h"
 #import "KChatLineFootView.h"
-
+#import "BuySellingModel.h"
 
 #define kRefreshTime 2
 #define kOtherRefreshTime        5      //轮询刷新时间 单位秒
@@ -130,6 +130,8 @@
 @property (nonatomic,strong) PushRemindConfigModel *remindConfigModel;
 
 @property (nonatomic,assign) FMKLineDirectionStyle fmKlineDirectionStyle;
+
+@property (nonatomic,strong) BuySellingModel *buyModel;
 
 #pragma mark - init
 - (instancetype)initWithCode:(NSString*)code exCode:(NSString*)excode title:(NSString*)title;

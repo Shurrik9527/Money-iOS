@@ -189,6 +189,7 @@
 
 - (void)setTextValue:(CGFloat)value
 {
+    
     if (self.attributedFormatBlock != nil) {
         self.attributedText = self.attributedFormatBlock(value);
     }

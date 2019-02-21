@@ -22,7 +22,7 @@
 @end
 
 @implementation FundListVC
--(instancetype)init
+- (instancetype)init
 {
     self=[super init];
     if (self) {
@@ -38,7 +38,14 @@
     NSNotificationCenter * Center = [NSNotificationCenter defaultCenter];
     [Center addObserver:self selector:@selector(NotificationCenterCommunication:) name:NFC_LocLogin object:nil];
 }
--(void)getDataSource
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self getDataSource];
+    self.tableView.frame = CGRectMake(0, 0, Screen_width, self.h_);
+}
+
+- (void)getDataSource
 {
     NSString * nowTime =[LTUtils getNowTimeString];
     _nowHM =[DataHundel getZiFuChuan:nowTime];
@@ -48,6 +55,7 @@
     NSNumber * statNumber =[NSNumber numberWithLong:_nowHM];
     [self networkStartTime:[DataHundel ConvertStrToTime:[statNumber stringValue]] endTime:[DataHundel ConvertStrToTime:[longNumber stringValue]]];
 }
+
 -(void)creatTableView
 {
     self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, Screen_width, self.h_) style:(UITableViewStylePlain)];
@@ -98,22 +106,56 @@
 }
 -(void)networkStartTime :(NSString * )startTime endTime:(NSString *)endTime
 {
-    if (notemptyStr([NSUserDefaults objFoKey:MT4ID])) {
-    NSString * urlString = [NSString stringWithFormat:@"%@%@",BasisUrl,@"/trading/records"];
-    NSDictionary * dic = @{@"server":[NSUserDefaults objFoKey:TYPE],@"mt4id":[NSUserDefaults objFoKey:MT4ID],@"startDate":@"01-01-2000 00:00:00",@"endDate":@"01-01-2030 00:00:00"};
-    [[NetworkRequests sharedInstance]GET:urlString dict:dic succeed:^(id data) {
+//    if (notemptyStr([NSUserDefaults objFoKey:MT4ID])) {
+//    NSString * urlString = [NSString stringWithFormat:@"%@%@",BasisUrl,@"/trading/records"];
+//    NSDictionary * dic = @{@"server":[NSUserDefaults objFoKey:TYPE],@"mt4id":[NSUserDefaults objFoKey:MT4ID],@"startDate":@"01-01-2000 00:00:00",@"endDate":@"01-01-2030 00:00:00"};
+//    [[NetworkRequests sharedInstance]GET:urlString dict:dic succeed:^(id data) {
+//        [self.tableView.header endRefreshing];
+//        [self.tableView.footer endRefreshing];
+//        if ([[data objectForKey:@"code"]integerValue] == 0) {
+//            self.dataArray =[postionModel mj_objectArrayWithKeyValuesArray:[data objectForKey:@"dataObject"]];
+//            [self.tableView reloadData];
+//        }
+//    } failure:^(NSError *error) {
+//        [self.tableView.header endRefreshing];
+//        [self.tableView.footer endRefreshing];
+//    }];
+//    }
+    if (![LTUser hasLogin]) {
+        return;
+    }
+    
+    
+    NSString * stringUrl =[NSString stringWithFormat:@"%@%@",BaseUrl,@"/transactionRecord/getList"];
+    
+    NSDictionary * dic = @{@"loginName":[NSUserDefaults objFoKey:@"loginName"],@"transactionStatus":@(0)};
+    
+    [[NetworkRequests sharedInstance] SWDPOST:stringUrl dict:dic succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
+        
+        NSLog(@"res == %@",resonseObj);
+        if (isSuccess) {
+                // 刷新
+            if (self.dataArray.count > 0) {
+                    [self.dataArray removeAllObjects];
+                    self.dataArray = [postionModel mj_objectArrayWithKeyValuesArray:resonseObj[@"list"]];
+            }else{
+                    self.dataArray = [postionModel mj_objectArrayWithKeyValuesArray:resonseObj[@"list"]];
+            }
+            [self.tableView reloadData];
+        }else{
+            
+        }
         [self.tableView.header endRefreshing];
         [self.tableView.footer endRefreshing];
-        if ([[data objectForKey:@"code"]integerValue] == 0) {
-            self.dataArray =[postionModel mj_objectArrayWithKeyValuesArray:[data objectForKey:@"dataObject"]];
-            [self.tableView reloadData];
-        }
     } failure:^(NSError *error) {
         [self.tableView.header endRefreshing];
         [self.tableView.footer endRefreshing];
+        
     }];
-    }
+
+    
 }
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }

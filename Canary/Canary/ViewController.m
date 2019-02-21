@@ -54,7 +54,7 @@
 #else
         _tabIcons = @[ @"0-0", @"1-0", @"2-0",  @"3-0" ];
 #endif
-        NSLog(@"UD_EnableDeal =%@",UD_ObjForKey(EnableDeal));
+//        NSLog(@"UD_EnableDeal =%@",UD_ObjForKey(EnableDeal));
         if ([LTUser hideDeal]) {
             _tabTitles = [NSArray arrayWithObjects:@"首页", @"行情", @"我的", nil];
             _tabIcons = @[ @"0-0", @"1-0",  @"3-0" ];

@@ -118,7 +118,7 @@
     // 布置背景
     [self createBackgroundViews];
     // k线图
-[self createKlineChartView];
+    [self createKlineChartView];
 //if(_model.type<=0)[self createMinuteChartView];
 
 }
@@ -1159,9 +1159,9 @@
         DaysChartModel *m = [item objectAtIndex:(item.count-2)];
         if (m.heightPrice.floatValue>maxPrice)
         {
-            maxPrice=m.heightPrice.floatValue;
-            maxPoint=CGPointFromString([item objectAtIndex:0]);
-            _maxValue=m.heightPrice;
+            maxPrice = m.heightPrice.floatValue;
+            maxPoint = CGPointFromString([item objectAtIndex:0]);
+            _maxValue = m.heightPrice;
         }
         
         if (m.lowPrice.floatValue<minPrice && m.lowPrice.floatValue>0)
@@ -1606,7 +1606,7 @@
 
 #pragma mark - action
 -(void)updateWithModel:(FMKLineModel *)model{
-    _model=nil;
+    _model = nil;
     _model = model;
     [self createKLineBox];
     [self setPointForMostValue];

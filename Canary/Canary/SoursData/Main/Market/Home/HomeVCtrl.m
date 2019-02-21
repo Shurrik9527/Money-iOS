@@ -32,6 +32,8 @@
 #import "NetworkRequests.h"
 #import "AsSocket.h"
 #import "HomeMarketList+CoreDataClass.h"
+#import "WebSocket.h"
+#import "BuySellingModel.h"
 #define addCellCount 3
 
 @interface HomeVCtrl ()
@@ -45,6 +47,9 @@
 @property (nonatomic,strong) GainSectionView *gainSectionView;
 @property (nonatomic,strong) QuotationScrollView *quotationScrollView;
 @property (nonatomic,strong) UIButton *activityBtn;
+
+@property (nonatomic, assign) BOOL isUpdateUI;
+
 
 @end
 
@@ -63,12 +68,13 @@
     self.list = [NSMutableArray array];
     // 获取存在本地的行情数据
 //    self.list = [MarketModel mj_objectArrayWithKeyValuesArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"market"]];
-    NSArray * arr = [HomeMarketList searchAll];
-    self.list = [NSMutableArray arrayWithArray:arr];
-    NSLog(@"行情数据本地缓存%@", self.list);
+    
+//    NSArray * arr = [HomeMarketList searchAll];
+//    self.list = [NSMutableArray arrayWithArray:arr];
+//    NSLog(@"行情数据本地缓存%@", self.list);
     self.chanceArray = [NSMutableArray array];
     // socket
-    [[AsSocket shareDataAsSocket] startConnectSocket];
+//    [[AsSocket shareDataAsSocket] startConnectSocket];
     // navigation
     [self createNavBar];
     // 添加通知
@@ -84,9 +90,8 @@
     [self createTableViewWithHeaderAndFooter];
     self.tableView.backgroundColor = LTBgColor;
     // 开户按钮
-    [self createActivityBtn];
-    
-    [self loadData];
+//    [self createActivityBtn];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -104,18 +109,16 @@
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     // 更新socket数据
-    [self updatasocket];
-//    [self loadData];
-
+    [self loadData];
     [self.pollADView start];
     [self createQuotationScrollView];
     [self configActivityBtn];
-}
+    
+    self.isUpdateUI = YES;
+    [self updatasocket];
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+    
 }
-
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -127,9 +130,10 @@
     
     [self.pollADView stop];
     
+    self.isUpdateUI = NO;
+
+    
 }
-
-
 
 #pragma mark - 通知相关
 // 添加通知
@@ -154,61 +158,15 @@
         //滚动图
         [self reqPollADList];
         // 获取行情
-        [self requestList];
+//        [self requestList];
+        [self getAllGoods];
         // 获取交易机会
-//        [self TradingChance];
+        [self TradingChance];
     }else{
         // 获取交易机会
-//        [self TradingChance];
+        [self TradingChance];
     }
     
-//    [self reqNewsList];//新闻公告
-}
-
-#pragma mark - 客服
-
-- (void)setupRightBt {
-    //隐藏
-    if(!_rightBt) {
-        _rightBt = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.header addSubview:_rightBt];
-        [_rightBt setImage:[UIImage imageNamed:@"live_btn_service"] forState:UIControlStateNormal];
-        
-        [_rightBt addTarget:self action:@selector(clickRightBt) forControlEvents:UIControlEventTouchUpInside];
-        [_rightBt mas_makeConstraints:^(MASConstraintMaker *make)
-         {
-             make.right.equalTo(@(-LTAutoW(5)));
-             make.width.equalTo(@44);
-             make.height.equalTo(@44);
-             make.centerY.equalTo(@0);
-         }];
-    }
-}
-//客服按钮点击方法 初始方法
-- (void)getServerConfig:(BOOL)bl {
-//    BOOL canPushServer = bl;
-    WS(ws);
-    //获取客服信息
-    [ws showLoadingWithMsg:nil];
-    [RequestCenter reqServerInfo:^(LTResponse *res)
-     {
-         [ws hideLoadingView];
-         if (res.success) {
-             [LTUser saveCustomerInfo:res.resDict];
-             if (bl) {
-                 [ws pushToServer];
-             }
-         }
-         else
-         {
-             NSString *msg = res.message?res.message :@"客服异常，请稍后再试";
-             [self.view showTip:msg];
-         }
-     }];
-}
-
-- (void)clickRightBt {
-    [self getServerConfig:YES];
 }
 
 #pragma mark - NavBar
@@ -273,7 +231,7 @@
     NSString * url = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/banner/getList"];
     NSDictionary * dic = @{@"pageSize":@"5"};
     [[NetworkRequests sharedInstance]POST:url dict:dic succeed:^(id data) {
-        NSLog(@"data === %@",data);
+//        NSLog(@"data === %@",data);
         NSArray * list = [data objectForKey:@"data"][@"list"];
         if (list.count > 0) {
             NSArray *resArr = [PollADModel objsWithList:list];
@@ -304,15 +262,16 @@
 
 #pragma mark 交易机会网络请求wz
 - (void)TradingChance{
-    [self showLoadingView];
+//    [self showLoadingView];
     NSString * url = [NSString stringWithFormat:@"%@%@",BasisUrl,@"/chance"];
 //    int i = self.pageNo;
     NSDictionary * dic =@{@"size":@10,
                           @"page":@(self.pageNo)
                           };
     
-    [[NetworkRequests sharedInstance]POST:url dict:dic succeed:^(id data) {
+    [[NetworkRequests sharedInstance] POST:url dict:dic succeed:^(id data) {
 //        NSLog(@"交易机会请求%@",data);
+        
         if ([[data objectForKey:@"code"]integerValue] == 0) {
             
             NSMutableArray * dataArr = [data objectForKey:@"dataObject"];
@@ -341,31 +300,6 @@
     }];
 }
 
-//排行榜接口
-- (void)reqRateList {
-//    WS(ws);
-//    [RequestCenter reqGainList:kStartPageNum completion:^(LTResponse *res) {
-//        if (res.success) {
-//            NSArray *arr = [GainModel objsWithList:res.resArr];
-//            if (arr.count > 0) {
-//                GainModel *mo = arr[0];
-//                [ws refGainView:mo];
-//            }
-//        }
-//        [ws endHeadOrFootRef];
-//    }];
-}
-
-- (void)refGainView:(GainModel *)mo {
-//    NSString *todayYMD = [[NSDate date] chinaYMDString];
-//    NSString *moYMD = mo.closeDate;
-//    if ([todayYMD isEqualToString:moYMD]) {
-//        [_gainSectionView refGainLab:mo.nickName profitRate:mo.profitRate];
-//    } else {
-//        [_gainSectionView refGainLab:nil profitRate:nil];
-//    }
-}
-
 #pragma mark 行情
 
 - (void)createQuotationScrollView {
@@ -379,24 +313,27 @@
     }
 }
 
-
 - (void)clickQuotationBtn:(NSNotification *)obj {
-    Quotation *item = obj.object;
-    if ([item isKindOfClass:[Quotation class]]) {
-        UMengEventWithParameter(page_home, @"QuotationThreeView_code", item.code);
-        WeiPanMarketViewController *ctrl = [[WeiPanMarketViewController alloc] initWithCode:item.code exCode:item.excode title:[item productNamed]];
-        [self pushVC:ctrl];
-    } else {
-        [self.view showTip:@"数据错误..."];
-    }
+    BuySellingModel *item = (BuySellingModel *)obj.object;
+    
+//    if ([item isKindOfClass:[BuySellingModel class]]) {
+//        UMengEventWithParameter(page_home, @"QuotationThreeView_code", item.code);
+    
+    WeiPanMarketViewController *ctrl = [[WeiPanMarketViewController alloc] initWithCode:item.symbolCode exCode:@"" title:item.symbolName];
+    ctrl.buyModel = item;
+    [self pushVC:ctrl];
+    
+//    } else {
+//        [self.view showTip:@"数据错误..."];
+//    }
 }
 #pragma mark - 获取行情列表
 -(void)requestList
 {
     NSString * url = [NSString stringWithFormat:@"%@%@",BasisUrl,@"/price/symbols"];
     NSDictionary * dic =@{@"server":@"DEMO"};
-    [[NetworkRequests sharedInstance]GET:url dict:dic succeed:^(id data) {
-        NSLog(@"data === %@",data);
+    [[NetworkRequests sharedInstance] GET:url dict:dic succeed:^(id data) {
+//        NSLog(@"data === %@",data);
         if ([[data objectForKey:@"code"]integerValue] == 0) {
             
             if (self.list.count > 0) {
@@ -410,6 +347,7 @@
                 // 先查询表里面是否有数据没有的话 执行添加数据库
                 if ([HomeMarketList searchAll].count == 0) {
                     [HomeMarketList AddData:model];
+                    NSLog(@"添加数据库");
                 }else{
                     // 查找数据库里面是否有值
                     NSArray * arr = [HomeMarketList searchConditions:model];
@@ -422,7 +360,9 @@
                 }
                 
             }
-            NSLog(@"list ==== %@",self.list);
+            
+//            NSLog(@"list ==== %@",self.list);
+            
               [self.quotationScrollView refDatas:self.list];
 //            [DataHundel shareDataHundle].marketArrat =[NSMutableArray arrayWithArray:self.list];
 //            [[NSUserDefaults standardUserDefaults] setObject:[data objectForKey:@"dataObject"] forKey:@"market"];
@@ -432,13 +372,46 @@
         
     }];
 }
+
+- (void)getAllGoods{
+    
+    NSString * url = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/symbolInfo/getList"];
+    WS(ws)
+    [[NetworkRequests sharedInstance] SWDPOST:url dict:@{@"page":@1,@"pageSize":@100} succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
+//        NSLog(@"res == %@",resonseObj);
+        
+        if (isSuccess) {
+            
+            ws.list = [BuySellingModel mj_objectArrayWithKeyValuesArray:resonseObj[@"list"]];
+            [ws.quotationScrollView refDatasSocket:self.list];
+
+            
+            
+        }
+     
+    } failure:^(NSError *error) {
+        
+        
+    }];
+    
+}
+
 #pragma mark - 更新socket数据
 -(void)updatasocket
 {
     WS(ws);
-    [[AsSocket shareDataAsSocket] setReturnValueBlock:^(NSMutableArray *socketArray) {
-        [ws.quotationScrollView socketdata:socketArray];
-//        NSLog(@"首页socket数据打印%@",socketArray);
+//    [[AsSocket shareDataAsSocket] setReturnValueBlock:^(NSMutableArray *socketArray) {
+//
+//        [ws.quotationScrollView socketdata:socketArray];
+////        NSLog(@"首页socket数据打印%@",socketArray);
+//    }];
+    
+    [[WebSocket shareDataAsSocket] setReturnValueBlock:^(SocketModel * _Nonnull socketModel) {
+        
+        if (ws.isUpdateUI) {
+            [ws.quotationScrollView webSocketdata:socketModel];
+        }
+        
     }];
 }
 
@@ -454,7 +427,6 @@
             if (self.pageNo == kStartPageNum) {
                 [self.list removeAllObjects];
             }
-         //   [self configNewsDatas:array];
             [self.tableView reloadData];
         }
 
@@ -462,85 +434,6 @@
 
     }];
 }
-
-- (void)configNewsDatas:(NSArray *)arr {
-    NSMutableArray *mos = [NSMutableArray array];
-    NewsModel *oldMO = nil;
-
-    if (_list.count > 0) {
-        [mos addObjectsFromArray:[_list lastObject]];
-        [_list removeLastObject];
-        if (mos.count > 0) {
-            oldMO = mos[0];
-        }
-    }
-
-    NSInteger i = 0;
-    NSInteger arrCount = arr.count;
-
-    for (NewsModel *mo in arr) {
-
-        if (!oldMO) {
-            [mos addObject:mo];
-        } else {
-            if ([[oldMO createTimeYMD] isEqualToString:[mo createTimeYMD]]) {
-                [mos addObject:mo];
-
-            } else {
-                NSArray *temp = [NSArray arrayWithArray:mos];
-                [_list addObject:temp];
-                [mos removeAllObjects];
-
-                [mos addObject:mo];
-            }
-        }
-        oldMO = mo;
-
-        i++;
-
-        if (i == arrCount) {
-            NSArray *temp = [NSArray arrayWithArray:mos];
-            [_list addObject:temp];
-            [mos removeAllObjects];
-        }
-    }
-}
-
-#pragma mark - 活动
-// 开户活动按钮
-- (void)createActivityBtn {
-    CGFloat wh = 44;
-    CGFloat btmMar = 44 + TabBarH_Lit;
-    CGFloat rightMar = 16;
-    self.activityBtn = [UIButton btnWithTarget:self action:@selector(activityBtnAction) frame:CGRectMake(ScreenW_Lit - rightMar - wh, ScreenH_Lit - btmMar - wh, wh, wh)];
-    [_activityBtn setNorImageName:@"activity_openAccount"];
-    [self.view addSubview:_activityBtn];
-    [self configActivityBtn];
-}
-// 开户活动点击方法
-- (void)activityBtnAction {
-    if (![self checkLocHasLogin]) {
-        return;
-    }
-    NSInteger state = UD_CardDistStatus;
-    if (state == 0) {
-        [self configActivityBtn];
-        return;
-    }
-    if (state == 1 || state == 3) {//1：认证失败，，3：认证中
-        [self pushCertResultVC];
-    }
-    else if (state == 2) {//2：资料未认证
-        [self pushCertVC];
-    }
-}
-
-- (void)configActivityBtn {
-//    NSInteger state = UD_CardDistStatus;
-//    BOOL hidden = (state == 4);
-//    _activityBtn.hidden = hidden;
-}
-
 
 #pragma mark - UITableViewDataSource
 
@@ -687,7 +580,7 @@ static CGFloat HeaderSectionH = 22;
     }
     NSInteger row = indexPath.row;
     section-=addCellCount;
-    ChanceModel *mo = _chanceArray[row];
+//    ChanceModel *mo = _c/hanceArray[row];
     /**
      先放百度链接
      */
@@ -779,5 +672,88 @@ static CGFloat HeaderSectionH = 22;
         }
     }
 }
+
+
+#pragma mark - 暂时不需要
+
+- (void)setupRightBt {
+    //隐藏
+    if(!_rightBt) {
+        _rightBt = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.header addSubview:_rightBt];
+        [_rightBt setImage:[UIImage imageNamed:@"live_btn_service"] forState:UIControlStateNormal];
+        
+        [_rightBt addTarget:self action:@selector(clickRightBt) forControlEvents:UIControlEventTouchUpInside];
+        [_rightBt mas_makeConstraints:^(MASConstraintMaker *make)
+         {
+             make.right.equalTo(@(-LTAutoW(5)));
+             make.width.equalTo(@44);
+             make.height.equalTo(@44);
+             make.centerY.equalTo(@0);
+         }];
+    }
+}
+//客服按钮点击方法 初始方法
+- (void)getServerConfig:(BOOL)bl {
+    //    BOOL canPushServer = bl;
+    WS(ws);
+    //获取客服信息
+    [ws showLoadingWithMsg:nil];
+    [RequestCenter reqServerInfo:^(LTResponse *res)
+     {
+         [ws hideLoadingView];
+         if (res.success) {
+             [LTUser saveCustomerInfo:res.resDict];
+             if (bl) {
+                 [ws pushToServer];
+             }
+         }
+         else
+         {
+             NSString *msg = res.message?res.message :@"客服异常，请稍后再试";
+             [self.view showTip:msg];
+         }
+     }];
+}
+
+- (void)clickRightBt {
+    [self getServerConfig:YES];
+}
+
+#pragma mark - 活动
+// 开户活动按钮
+- (void)createActivityBtn {
+    CGFloat wh = 44;
+    CGFloat btmMar = 44 + TabBarH_Lit;
+    CGFloat rightMar = 16;
+    self.activityBtn = [UIButton btnWithTarget:self action:@selector(activityBtnAction) frame:CGRectMake(ScreenW_Lit - rightMar - wh, ScreenH_Lit - btmMar - wh, wh, wh)];
+    [_activityBtn setNorImageName:@"activity_openAccount"];
+    [self.view addSubview:_activityBtn];
+    [self configActivityBtn];
+}
+// 开户活动点击方法
+- (void)activityBtnAction {
+    if (![self checkLocHasLogin]) {
+        return;
+    }
+    NSInteger state = UD_CardDistStatus;
+    if (state == 0) {
+        [self configActivityBtn];
+        return;
+    }
+    if (state == 1 || state == 3) {//1：认证失败，，3：认证中
+        [self pushCertResultVC];
+    }
+    else if (state == 2) {//2：资料未认证
+        [self pushCertVC];
+    }
+}
+
+- (void)configActivityBtn {
+    //    NSInteger state = UD_CardDistStatus;
+    //    BOOL hidden = (state == 4);
+    //    _activityBtn.hidden = hidden;
+}
+
 
 @end

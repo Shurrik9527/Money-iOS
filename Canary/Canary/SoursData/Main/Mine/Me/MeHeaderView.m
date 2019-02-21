@@ -135,6 +135,8 @@
         
         [self.infoBt setTitleColor:[UIColor grayColor] forState:(UIControlStateNormal)];
         self.infoBt.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.1];
+        [self.infoBt addSingeTap:@selector(authAction) target:self];
+
         [_userView addSubview:self.infoBt];
     }
     [self refViewWithLogin];
@@ -165,6 +167,10 @@
 
 - (void)vipViewAction {
     [[NSNotificationCenter defaultCenter] postNotificationName:NFC_PushIntegralVC object:nil];
+}
+
+- (void)authAction {
+    [[NSNotificationCenter defaultCenter] postNotificationName:NFC_PushAuthVC object:nil];
 }
 
 
@@ -207,17 +213,17 @@
 - (void)updateHeadImg {
     WS(ws);
     [_headIV sd_setImageWithURL:[UD_Avatar toURL] placeholderImage:[UIImage imageNamed:@"Head80"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        if (image) {
-            UIImage *img = [image cutedCenterSquare];
-            ws.headIV.image = img;
-            
-            UIImage *tmp = [img copy];
-            UIImage *littleImg = [tmp toJPEGImage:0.3];
-            UIImage *bgimg = [littleImg blurWithRadius:5];
-            ws.bgIV.image = bgimg;
-        } else {
-            self.bgIV.image = nil;
-        }
+//        if (image) {
+//            UIImage *img = [image cutedCenterSquare];
+//            ws.headIV.image = img;
+//            
+//            UIImage *tmp = [img copy];
+//            UIImage *littleImg = [tmp toJPEGImage:0.3];
+//            UIImage *bgimg = [littleImg blurWithRadius:5];
+//            ws.bgIV.image = bgimg;
+//        } else {
+//            self.bgIV.image = nil;
+//        }
     }];
 }
 -(void)infoAction

@@ -15,6 +15,7 @@
 #define NFC_PushLoginVC     @"NFC_PushLoginVC"
 #define NFC_PushAccountManager     @"NFC_PushAccountManager"
 #define NFC_PushIntegralVC     @"NFC_PushIntegralVC"
+#define NFC_PushAuthVC     @"NFC_PushAuthVC"
 
 @interface MeHeaderView : UIView
 

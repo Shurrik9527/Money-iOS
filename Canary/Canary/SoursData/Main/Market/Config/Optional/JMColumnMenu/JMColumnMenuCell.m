@@ -77,13 +77,13 @@
     
     //标题文字处理
     if (model.title.length == 2) {
-        self.title.font = [UIFont systemFontOfSize:15];
-    } else if (model.title.length == 3) {
-        self.title.font = [UIFont systemFontOfSize:14];
-    } else if (model.title.length == 4) {
         self.title.font = [UIFont systemFontOfSize:13];
-    } else if (model.title.length > 4) {
+    } else if (model.title.length == 3) {
+        self.title.font = [UIFont systemFontOfSize:13];
+    } else if (model.title.length == 4) {
         self.title.font = [UIFont systemFontOfSize:12];
+    } else if (model.title.length > 4) {
+        self.title.font = [UIFont systemFontOfSize:11];
     }
     
     if (model.type == JMColumnMenuTypeTencent) {
@@ -103,7 +103,7 @@
 }
 
 - (CGSize)returnTitleSize {
-    CGFloat maxWidth = self.emptyView.width - 12;
+    CGFloat maxWidth = self.emptyView.width - 6;
     CGSize size = [self.title.text boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX)
                                                 options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
                                              attributes:@{NSFontAttributeName:self.title.font}

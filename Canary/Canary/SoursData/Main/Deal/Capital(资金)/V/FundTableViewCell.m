@@ -16,6 +16,7 @@
     self =[super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self creatView];
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
@@ -33,9 +34,9 @@
     [self.contentView addSubview:self.symLabel];
 
 
-    UIImageView * imageRight =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"right"]];
-    imageRight.frame =CGRectMake(Screen_width - 30, 22.5, 15, 15);
-    [self.contentView addSubview:imageRight];
+//    UIImageView * imageRight =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"right"]];
+//    imageRight.frame =CGRectMake(Screen_width - 30, 22.5, 15, 15);
+//    [self.contentView addSubview:imageRight];
     
     self.timeLabel =[[UILabel alloc]initWithFrame:CGRectMake(self.statView.xw_ + 10, self.symLabel.yh_ + 5, 200, 25)];
     self.timeLabel.font =[UIFont systemFontOfSize:13];
@@ -56,33 +57,34 @@
 {
 //    NSInteger a =mode.volume.doubleValue * 100;
 //    NSString * vlume =[NSString stringWithFormat:@"%ld",a];
-    if ([mode.cmd isEqualToString:@"BUY"]) {
+    if (mode.ransactionType == 1) {
         self.statView.backgroundColor =LTKLineRed;
-        self.typeLabel.text =[NSString stringWithFormat:@"%@%@%@", @"买涨   ",mode.volume,@"手"];
+        self.typeLabel.text =[NSString stringWithFormat:@"%@%ld%@", @"买涨   ",(long)mode.lot,@"手"];
         self.typeLabel.textColor = LTRedColor;
 
     }else
     {
         self.statView.backgroundColor =LTKLineGreen;
-        self.typeLabel.text =[NSString stringWithFormat:@"%@%@%@", @"买跌   ",mode.volume,@"手"];
+        self.typeLabel.text =[NSString stringWithFormat:@"%@%ld%@", @"买跌   ",(long)mode.lot,@"手"];
         self.typeLabel.textColor = LTKLineGreen;
     }
-    NSMutableArray  * markArray =[NSMutableArray arrayWithArray:[DataHundel shareDataHundle].marketArrat];
-    if (markArray.count > 0 ) {
-        for (MarketModel * marketModel in markArray) {
-            if ([marketModel.symbol isEqualToString:mode.symbol]) {
-                self.symLabel.text = marketModel.symbol_cn;
-            }
-        }
-    }
-    self.timeLabel.text = [NSString stringWithFormat:@"%@%@",@"建仓时间: ",[DataHundel convertime:mode.open_time]];
-    if (mode.profit.floatValue > 0) {
+    self.symLabel.text = mode.symbolName;
+
+//    NSMutableArray  * markArray =[NSMutableArray arrayWithArray:[DataHundel shareDataHundle].marketArrat];
+//    if (markArray.count > 0 ) {
+//        for (MarketModel * marketModel in markArray) {
+//            if ([marketModel.symbol isEqualToString:mode.symbol]) {
+//            }
+//        }
+//    }
+    self.timeLabel.text = [NSString stringWithFormat:@"%@%@",@"建仓时间: ",mode.createTime];
+    if (mode.profit > 0) {
         self.priceLabel.textColor =LTKLineRed;
-        self.priceLabel.text = [NSString stringWithFormat:@"%.2f%@",mode.profit.doubleValue,@"$"];
+        self.priceLabel.text = [NSString stringWithFormat:@"%.2f%@",mode.profit,@"$"];
     }else
     {
         self.priceLabel.textColor =LTKLineGreen;
-        self.priceLabel.text = [NSString stringWithFormat:@"%.2f%@",mode.profit.doubleValue,@"$"];
+        self.priceLabel.text = [NSString stringWithFormat:@"%.2f%@",mode.profit,@"$"];
     }
 }
 - (void)awakeFromNib {

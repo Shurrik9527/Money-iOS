@@ -79,8 +79,10 @@ static CGFloat pageControlH = 5.f;
     NSInteger objsCount = _objs.count;
     for (i = 0 ; i < objsCount; i ++) {
         QuotationBtn *quotationBtn = [self createSingleView:i];
-        MarketModel * model = _objs[i];
-        quotationBtn.stringTag = model.symbol;
+//        MarketModel * model = _objs[i];
+        BuySellingModel *model = _objs[i];
+        quotationBtn.stringTag = model.symbolCode;
+        [quotationBtn refData:model];
         [_scView addSubview:quotationBtn];
     }
     _homeRefreshHttpDatas ? _homeRefreshHttpDatas() : nil;
@@ -92,8 +94,8 @@ static CGFloat pageControlH = 5.f;
 }
 
 //首页行情接口请求下来的model
-- (void)refQuotation:(MarketModel *)q {
-    NSString *code = q.symbol;
+- (void)refQuotation:(BuySellingModel *)q {
+    NSString *code = q.symbolCode;
     QuotationBtn *quotationBtn = (QuotationBtn *)[_scView viewWithStringTag:code];
      [quotationBtn refData:q];
 }
@@ -115,8 +117,30 @@ static CGFloat pageControlH = 5.f;
                 [HomeMarketList andkey:marketModel];
       }
    }
+    }
+    
 }
+
+- (void)webSocketdata:(SocketModel *)model
+{
+        for (int i = 0; i < _objs.count; i ++) {
+            BuySellingModel * marketModel =[_objs objectAtIndex:i];
+            if ([marketModel.symbolCode isEqualToString:model.symbolCode]) {
+                
+                
+                marketModel.price = model.price;
+                
+                if ([self.symbolArray containsObject:marketModel.symbolCode]) {
+                    QuotationBtn *quotationBtn = (QuotationBtn *)[_scView viewWithStringTag:marketModel.symbolCode];
+                    [quotationBtn socketmodel:marketModel];
+                }
+                
+//                [HomeMarketList andkey:marketModel];
+            }
+        }
+    
 }
+
 #pragma mark UIScrollerViewDelegate
 
 - (void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -127,19 +151,19 @@ static CGFloat pageControlH = 5.f;
 }
 
 - (void)setSymbolArrayContent:(NSInteger )curPage{
-    NSLog(@"当前是第%ld页",curPage);
+//    NSLog(@"当前是第%ld页",curPage);
 
     [self.symbolArray removeAllObjects];
 
     for (int i = 0; i < _objs.count; i++) {
         if (i / 3 == curPage) {
-            MarketModel *model = _objs[i];
-            NSLog(@"%@",model.symbol);
-            [self.symbolArray addObject:model.symbol];
+            BuySellingModel *model = _objs[i];
+//            NSLog(@"%@",model.symbol);
+            [self.symbolArray addObject:model.symbolCode];
         }
     }
 
-    NSLog(@"symbol === %@",self.symbolArray);
+//    NSLog(@"symbol === %@",self.symbolArray);
 }
 
 #pragma mark - 外部
@@ -148,6 +172,16 @@ static CGFloat pageControlH = 5.f;
         [self configNum:arr];
     }
     for (MarketModel *q in arr) {
+        [self refQuotation:q];
+    }
+    [self setSymbolArrayContent:curPage];
+}
+
+- (void)refDatasSocket:(NSArray *)arr{
+    if (allPage <= 0) {
+        [self configNum:arr];
+    }
+    for (BuySellingModel *q in arr) {
         [self refQuotation:q];
     }
     [self setSymbolArrayContent:curPage];

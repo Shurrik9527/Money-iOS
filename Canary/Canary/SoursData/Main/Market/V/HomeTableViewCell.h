@@ -9,17 +9,20 @@
 #import "BaseTableViewCell.h"
 #import "QuotationCellModel.h"
 #import "MarketModel.h"
+#import "BuySellingModel.h"
 @interface HomeTableViewCell : BaseTableViewCell
-@property (nonatomic,retain) UILabel *name;
-@property (nonatomic,retain) UILabel *code;
-@property (nonatomic,retain) UILabel *price;
-@property (nonatomic,retain) UILabel *weipanId;
-@property (nonatomic,retain) UILabel *outPrice;
-@property (nonatomic,retain) UIButton *change;
-@property (nonatomic,retain) UIImageView *ico;
-@property (nonatomic,assign)float changerate;
+@property (nonatomic, strong) UILabel *name;
+@property (nonatomic, strong) UILabel *code;
+@property (nonatomic, strong) UILabel *price;
+//@property (nonatomic, strong) UILabel *weipanId;
+@property (nonatomic, strong) UIButton *change;
+@property (nonatomic, strong) UIImageView *ico;
+@property (nonatomic, assign)float changerate;
 
--(void)changeChangColorWithOldChang:(NSString*)chang;
--(void)updateCellContent:(MarketModel *)model;
+//- (void)changeChangColorWithOldChang:(NSString*)chang;
+
+- (void)updateCellContent:(MarketModel *)model;
+
+- (void)updateCellContent1:(BuySellingModel *)model;
 
 @end

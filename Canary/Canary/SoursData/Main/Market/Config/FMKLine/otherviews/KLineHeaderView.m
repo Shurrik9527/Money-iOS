@@ -51,7 +51,7 @@
     if (!_price) {
         _price = [[UICountingLabel alloc] initWithFrame:frame];
         _price.method = UILabelCountingMethodLinear;
-        _price.format = @"%.5f";
+        _price.format = @"%.2f";
         _price.font=font;
         [self addSubview:_price];
         _price.textAlignment = NSTextAlignmentLeft;
@@ -163,14 +163,15 @@
 {
     if (socketModle) {
     [self startAnimation];
-    CGFloat oldPrice=_close_price.text.floatValue;
-    CGFloat newPrice =socketModle.buy_in.floatValue;
+    CGFloat oldPrice = _close_price.text.floatValue;
+    CGFloat newPrice = socketModle.buy_in.floatValue;
     [_price countFrom:_price.text.floatValue to:socketModle.buy_in.floatValue withDuration:0.4];
         //时差显示加五个小时
-    NSString * timeStr =[NSString stringWithFormat:@"%@ %@",socketModle.dataStr, socketModle.timeStr];
-    long long  haomiao_=  [DataHundel getZiFuChuan:timeStr];
-    long long lastTime = haomiao_  +( 5 * 60*60*1000);
-    NSNumber *longlongNumber = [NSNumber numberWithLongLong:lastTime];
+//    NSString * timeStr =[NSString stringWithFormat:@"%@ %@",socketModle.dataStr, socketModle.timeStr];
+//    long long  haomiao_=  [DataHundel getZiFuChuan:timeStr];
+    long long  haomiao_=  [socketModle.marketTime.time longLongValue];
+//    long long lastTime = haomiao_  +( 5 * 60 * 60 * 1000);
+    NSNumber *longlongNumber = [NSNumber numberWithLongLong:haomiao_];
     NSString *longlongStr = [longlongNumber stringValue];
     _time.text =[DataHundel convertime:longlongStr];
         
@@ -193,6 +194,7 @@
     }
     }
  }
+
 #pragma mark - animation refresh
 -(void)startAnimation {
     animation = [CABasicAnimation animation];
