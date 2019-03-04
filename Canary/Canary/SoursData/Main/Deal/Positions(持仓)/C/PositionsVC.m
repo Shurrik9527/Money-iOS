@@ -74,7 +74,7 @@
 
 - (void)creatTableViewHeader:(BOOL)hbl
 {
-    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, Screen_width, self.h_ - 158) style:(UITableViewStylePlain)];
+    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, Screen_width, self.h_ - 50 - kBottomBarHeight - NavBarTop_Lit - 40) style:(UITableViewStylePlain)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;

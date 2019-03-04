@@ -62,9 +62,11 @@
 
 -(void)creatTableView
 {
-    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, Screen_width, self.h_) style:(UITableViewStylePlain)];
+    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 0, Screen_width, self.h_) style:(UITableViewStyleGrouped)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.sectionHeaderHeight = 0;
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.1)];
 //    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.tableView];
     

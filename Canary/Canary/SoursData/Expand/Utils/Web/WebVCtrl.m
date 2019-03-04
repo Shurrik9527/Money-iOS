@@ -98,7 +98,7 @@
         _webView = [[UIWebView alloc] init];
         _webView.backgroundColor = LTClearColor;
         CGFloat y = 44;
-        CGRect rect = CGRectMake(0, y - paddingTop,ScreenW_Lit, ScreenH_Lit - y + paddingTop);
+        CGRect rect = CGRectMake(0, StateBarHeight + y - paddingTop,ScreenW_Lit, ScreenH_Lit - y + paddingTop - StateBarHeight);
         _webView.frame = rect;
         _webView.opaque = NO;
         _webView.delegate = self;
@@ -107,6 +107,8 @@
         [self.view sendSubviewToBack:_webView];
         [self addMJHeader];
         if (_url) {
+            
+
             NSURLRequest *request = [NSURLRequest requestWithURL:_url];
             [_webView loadRequest:request];
             request = nil;

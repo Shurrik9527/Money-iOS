@@ -22,6 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString *)getRSAKEY:(NSString *)jsonStr;
 
+//上传公钥
+- (void)uploadPublicKey;
+
+- (void)switchGetInfo;
+
 @end
 
 NS_ASSUME_NONNULL_END

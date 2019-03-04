@@ -95,7 +95,6 @@
             NSLog(@"data === %@",data);
             
             if ([[data objectForKey:@"msgCode"] integerValue] == 0) {
-                [self uploadPublicKey];
                 [self createTimer];
             }
             
@@ -167,6 +166,19 @@
     [[NetworkRequests sharedInstance] SWDPOST:urlString dict:@{@"publicKey":self.public_key_string} succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
         
         NSLog(@"上传公钥 === %@",resonseObj);
+        
+    } failure:^(NSError *error) {
+        
+    }];
+    
+}
+
+- (void)switchGetInfo{
+    
+    NSString * urlString = [NSString stringWithFormat:@"%@%@",BaseUrl,@"/switch/getInfo"];
+    [[NetworkRequests sharedInstance] SWDPOST:urlString dict:@{@"platform":@"IOS",@"versions":@"1"} succeed:^(id resonseObj, BOOL isSuccess, NSString *message) {
+        
+        NSLog(@"switch === %@",resonseObj);
         
     } failure:^(NSError *error) {
         

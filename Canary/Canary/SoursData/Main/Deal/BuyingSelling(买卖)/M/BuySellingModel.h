@@ -14,10 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)NSString *entryOrders;
 @property (nonatomic, strong)NSString *id;
-@property (nonatomic, strong)NSString *quantityCommissionCharges;
+@property (nonatomic, assign)CGFloat quantityCommissionCharges;
 @property (nonatomic, assign)CGFloat quantityOne;
 @property (nonatomic, strong)NSString *quantityOvernightFee;
-@property (nonatomic, strong)NSString *quantityPriceFluctuation;
+@property (nonatomic, assign)CGFloat quantityPriceFluctuation;
 @property (nonatomic, assign)CGFloat quantityThree;
 @property (nonatomic, assign)CGFloat quantityTwo;
 @property (nonatomic, assign)NSInteger status;

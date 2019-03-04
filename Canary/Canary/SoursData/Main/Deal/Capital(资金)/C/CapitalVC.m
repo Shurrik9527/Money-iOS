@@ -142,7 +142,7 @@
     CGFloat y = self.segment.yh_;
     
     NSLog(@"navbar ==== %.f",ScreenH_Lit);
-    CGFloat h = ScreenH_Lit - y - 50 - 64 - 40;
+    CGFloat h = ScreenH_Lit - y - 50 - kBottomBarHeight - NavBarTop_Lit - 45;
     CGRect frame = CGRectMake(0, y, self.w_, h);
     _superScrollView =[[UIScrollView alloc]initWithFrame:frame];
     _superScrollView.delegate = self;

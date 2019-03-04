@@ -41,9 +41,11 @@
 - (void)createTableViewWithHeader {
     [self createTableViewWithHeader:YES Footer:NO];
 }
+
 - (void)createTableViewWithFooter {
     [self createTableViewWithHeader:NO Footer:YES];
 }
+
 - (void)createTableViewWithHeaderAndFooter {
     [self createTableViewWithHeader:YES Footer:YES];
 }

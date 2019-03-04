@@ -236,10 +236,20 @@
     [_count_lx_40 setTitle:[NSString stringWithFormat:@"%@美元/手",[unitPriceTwo stringValue]] forState:UIControlStateNormal];
     [_count_lx_100 setTitle:[NSString stringWithFormat:@"%@美元/手",[unitPriceThree stringValue]] forState:UIControlStateNormal];
     
-    _tiltleLabel1.text = [NSString stringWithFormat:@"每波动一个点，收益%@美元",model.quantityPriceFluctuation];
+    _tiltleLabel1.text = [NSString stringWithFormat:@"每波动一个点，收益%lf美元",model.quantityPriceFluctuation];
     _bottomContent.text = [NSString stringWithFormat:@"*过夜费%@美元/天，默认开启，建仓后可手动关闭",model.quantityOvernightFee];
     
-    _bottom_subLabel.text = [NSString stringWithFormat:@"(手续费:%@美元)",model.quantityCommissionCharges];
+    NSDecimalNumber *shouxu = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", model.quantityCommissionCharges * model.unitPriceOne * model.quantityOne]];
+    _bottom_subLabel.text = [NSString stringWithFormat:@"(手续费:%@美元)",shouxu];
+    NSDecimalNumber *point = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", model.quantityPriceFluctuation * model.unitPriceOne * model.quantityOne]];
+
+    _gd_pointTextField.text = [NSString stringWithFormat:@"%@",point];
+    
+    self.y_count = 2 / model.quantityPriceFluctuation;
+    self.s_count = 0.8 / model.quantityPriceFluctuation;
+    self.y_rightLabel.text = [NSString stringWithFormat:@"%ld",self.y_count];
+    self.s_rightLabel.text = [NSString stringWithFormat:@"%ld",self.s_count];
+    
     
     [self getTotelPrice];
 
@@ -291,7 +301,7 @@
         }else{
             
             NSDecimalNumber *dian = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", ceil(self.y_count * slider.value)]];
-            NSDecimalNumber *money = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", ceil(self.y_count * slider.value) * _model.quantityPriceFluctuation.floatValue]];
+            NSDecimalNumber *money = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", ceil(self.y_count * slider.value) * _model.quantityPriceFluctuation * self.lot * self.lxPrice / 10]];
             self.y_changeCount = dian.integerValue;
             self.y_changeLabel.text = [NSString stringWithFormat:@"%@点（%@美元）",[dian stringValue],[money stringValue]];
         }
@@ -305,7 +315,7 @@
             
             // 将字符串转成一个十进制数。
             NSDecimalNumber *dian = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", ceil(self.s_count * slider.value)]];
-            NSDecimalNumber *money = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", ceil(self.s_count * slider.value) * _model.quantityPriceFluctuation.floatValue]];
+            NSDecimalNumber *money = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", ceil(self.s_count * slider.value) * _model.quantityPriceFluctuation * self.lot * self.lxPrice /10]];
             self.s_changeCount = dian.integerValue;
 
             self.s_changeLabel.text = [NSString stringWithFormat:@"%@点（%@美元）",[dian stringValue],[money stringValue]];
@@ -321,9 +331,19 @@
     self.lot = self.selectBtn_jc.tag % 200;
     
     NSLog(@"lxPrice == %f  lot == %ld",self.lxPrice,self.lot)
-    NSDecimalNumber *money = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", self.lxPrice * self.lot + _model.quantityCommissionCharges.floatValue]];
+    NSDecimalNumber *money = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", self.lxPrice * self.lot + self.model.quantityCommissionCharges * self.lxPrice * self.lot]];
 
     _bottom_priceLabel.text = [NSString stringWithFormat:@"%@",money];
+    
+    
+    NSDecimalNumber *shouxu = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lf", self.model.quantityCommissionCharges * self.lxPrice * self.lot]];
+    _bottom_subLabel.text = [NSString stringWithFormat:@"(手续费:%@美元)",shouxu];
+
+    self.y_count = 20 / self.model.quantityPriceFluctuation;
+    self.s_count = 8 / self.model.quantityPriceFluctuation;
+    self.y_rightLabel.text = [NSString stringWithFormat:@"%ld",self.y_count];
+    self.s_rightLabel.text = [NSString stringWithFormat:@"%ld",self.s_count];
+    
     
 }
 

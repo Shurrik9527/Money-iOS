@@ -63,6 +63,8 @@
     [UserDefaults removeObjectForKey:TYPE];
     [UserDefaults removeObjectForKey:@"loginName"];
     [UserDefaults removeObjectForKey:@"password"];
+    [UserDefaults removeObjectForKey:kAvatar];
+
     [[JWTHundel shareHundle] removeTimer];
     [LTUser delToken];
     

@@ -81,7 +81,7 @@
 #pragma mark - DealHead
 
 - (void)createHead {
-    CGRect frame =CGRectMake(0, 64, ScreenW_Lit,DealHeadVH);
+    CGRect frame =CGRectMake(0, NavBarTop_Lit, ScreenW_Lit,DealHeadVH);
     _dealHead=[[UIView alloc]init];
     _dealHead.frame=frame;
     _dealHead.backgroundColor=NavHeadBgCoror;

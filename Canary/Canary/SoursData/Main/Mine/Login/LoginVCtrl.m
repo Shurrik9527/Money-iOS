@@ -271,6 +271,7 @@
                 [NSUserDefaults setObj:phoneStr foKey:@"loginName"];
                 [NSUserDefaults setObj:pwdStr foKey:@"password"];
                 [[JWTHundel shareHundle] createTimer];
+                [[JWTHundel shareHundle] uploadPublicKey];
                 [self getUserMessage];
                 
             }else
@@ -303,9 +304,16 @@
             [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
             
             NSString * nickName = resonseObj[@"userName"];
+            NSString * userImg = resonseObj[@"userImg"];
+            NSString * userId = resonseObj[@"id"];
+            if (![userImg isEqual:[NSNull null]]) {
+                UD_SetAvatar(userImg);
+            }
             [NSUserDefaults setObj:nickName foKey:kNickName];
+            [NSUserDefaults setObj:userId foKey:kUserId];
             [[NSNotificationCenter defaultCenter] postNotificationName:NFC_LocLogin  object:nil];
             [ws popVC];
+
             
 //            NSArray * array = [resonseObj objectForKey:@"attachments"];
 //            NSArray * photoIDArray = [AttachmentsModel mj_objectArrayWithKeyValuesArray:array];
@@ -464,7 +472,7 @@
 
         pwdStr = [GTMBase64 stringByEncodingData:[[NSString stringWithFormat:@"zst%@013",pwdStr] dataUsingEncoding:NSUTF8StringEncoding]];
         
-        NSDictionary * dic = @{@"id":@(self.codeId),@"loginName":phoneStr,@"verificationCode":codeStr,@"password":pwdStr,@"userName":_nameView.field.text};
+        NSDictionary * dic = @{@"id":@(self.codeId),@"loginName":phoneStr,@"verificationCode":codeStr,@"password":pwdStr,@"nickName":_nameView.field.text};
         NSLog(@"dic ==== %@",dic);
         WS(ws);
         [self showLoadingView];

@@ -14,6 +14,7 @@
 		0501378821E09BEE00C2DDEB /* CashCouponCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0501378621E09BEE00C2DDEB /* CashCouponCell.xib */; };
 		0501378B21E3734100C2DDEB /* BuySellingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0501378A21E3734100C2DDEB /* BuySellingModel.m */; };
 		051FAD7B21F04775007060BA /* JWTHundel.m in Sources */ = {isa = PBXBuildFile; fileRef = 051FAD7A21F04775007060BA /* JWTHundel.m */; };
+		05219ABD2223862900067386 /* perfectMsg in Resources */ = {isa = PBXBuildFile; fileRef = 05219ABC2223862800067386 /* perfectMsg */; };
 		0535EE6C21DCB62F0009FDA1 /* BuyingSellingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0535EE6B21DCB62F0009FDA1 /* BuyingSellingVC.m */; };
 		0535EE6F21DCB6430009FDA1 /* PutupVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0535EE6E21DCB6430009FDA1 /* PutupVC.m */; };
 		0535EE7321DCC2AE0009FDA1 /* BuyingSellingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0535EE7121DCC2AE0009FDA1 /* BuyingSellingCell.m */; };
@@ -554,6 +555,7 @@
 		0501378A21E3734100C2DDEB /* BuySellingModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BuySellingModel.m; sourceTree = "<group>"; };
 		051FAD7921F04775007060BA /* JWTHundel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JWTHundel.h; sourceTree = "<group>"; };
 		051FAD7A21F04775007060BA /* JWTHundel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JWTHundel.m; sourceTree = "<group>"; };
+		05219ABC2223862800067386 /* perfectMsg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = perfectMsg; sourceTree = "<group>"; };
 		0535EE6A21DCB62F0009FDA1 /* BuyingSellingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BuyingSellingVC.h; sourceTree = "<group>"; };
 		0535EE6B21DCB62F0009FDA1 /* BuyingSellingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BuyingSellingVC.m; sourceTree = "<group>"; };
 		0535EE6D21DCB6430009FDA1 /* PutupVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PutupVC.h; sourceTree = "<group>"; };
@@ -2221,6 +2223,7 @@
 		9D0C977A1EBC44E5004AE4EA /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				05219ABC2223862800067386 /* perfectMsg */,
 				9D0C977F1EBC44E5004AE4EA /* Market */,
 				9D0C977B1EBC44E5004AE4EA /* Deal */,
 				9D0C977E1EBC44E5004AE4EA /* Live */,
@@ -4034,6 +4037,7 @@
 				TargetAttributes = {
 					9D1FE9141EBAFF470006404A = {
 						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = R94C7UFS2M;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
@@ -4088,6 +4092,7 @@
 				9D91E6361ECAD5F700C0953E /* NTESVideoViewController.xib in Resources */,
 				0535EE7921DCF93C0009FDA1 /* GuaDanView.xib in Resources */,
 				9D91E6281ECAD5F700C0953E /* NTESFilePreViewController.xib in Resources */,
+				05219ABD2223862900067386 /* perfectMsg in Resources */,
 				05CD8C0C221A96CC00292CF7 /* MyAssetsView.xib in Resources */,
 				0535EE7421DCC2AE0009FDA1 /* BuyingSellingCell.xib in Resources */,
 				9D91E6261ECAD5F700C0953E /* NTESAudio2TextViewController.xib in Resources */,
@@ -4787,7 +4792,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = R94C7UFS2M;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4868,7 +4873,7 @@
 					"-framework",
 					"\"UIKit\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.newEsegou;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hunme.hmcall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4889,7 +4894,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = R94C7UFS2M;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4970,7 +4975,7 @@
 					"-framework",
 					"\"UIKit\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.newEsegou;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hunme.hmcall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";

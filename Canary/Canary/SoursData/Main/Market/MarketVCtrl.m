@@ -163,7 +163,7 @@
     //创建品种bar
     int i = -1;
     CGFloat x = 16;
-    CGFloat y = 64;
+    CGFloat y = NavBarTop_Lit;
     CGFloat w = 70;
     CGFloat h = kProductScrollViewH;
     _productScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,y, self.w_, h)];
@@ -216,7 +216,7 @@
         //初始化 添加 表头
         [self addSectionView];
         CGFloat y = _sectionView.yh_;//表头高度
-        CGRect rect = CGRectMake(0, y, self.w_, ScreenH_Lit-NavAndTabBarH_Lit- kProductScrollViewH-kSectionHeight);
+        CGRect rect = CGRectMake(0, y, self.w_, ScreenH_Lit - NavAndTabBarH_Lit- kProductScrollViewH - kSectionHeight);
         _marketTable = [[OptionalTableView alloc] initWithFrame:rect style:UITableViewStylePlain];
         _marketTable.delegate = self;
         _marketTable.dataSource = self;

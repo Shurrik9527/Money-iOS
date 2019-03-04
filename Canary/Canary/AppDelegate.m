@@ -43,6 +43,8 @@
     
     [LTUser reqStartup];
     [[JWTHundel shareHundle] createLogin];
+    [[JWTHundel shareHundle] switchGetInfo];
+    
     [self defaultValueConfig];//默认值配置
     
 //    [self configUMeng];
@@ -55,30 +57,13 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
-//    [self MYTEST];//测试
     
     return YES;
 }
 
-
-
-
 #pragma mark - 私有方法
 -(void)defaultValueConfig {
     [LTUtils setSetingDefaultValue];
-}
-
-- (void)MYTEST {
-    
-
-//    _dealMsgDic= @{@"body":@"纳斯达克买涨0.01手已止损平仓",@"data":@{@"profitLoss":@"-0.25",@"createTime":@"2017-06-08 20:27:28",@"excode":@"FXBTG",@"status":@(0),@"code":@"NAS100",@"deferred":@"0.0",@"type":@(2),@"productId":@"2922ab7b2e58913a",@"amount":@"5.90",@"closePrice":@"5894.73",@"createPrice":@"5897.18",@"fee":@"0.00",@"closeTime":@"2017-06-08 20:31:15",@"userId":@(205566),@"orderNumber":@"29.001",@"stopProfit":@"0",@"closeType":@(5),@"productName":@"纳斯达克",@"orderId":@"6786728",@"stopLoss":@"5895"},@"sendType":@(4),@"title":@"交易消息"};
-//        [self showDealMsgPop];
-//    NSDictionary * user1= @{@"body":@"美原油 已达到您设置的行情点位 46.15",@"data":@{@"buyType":@(2),@"time":@(1496906241006),@"excode":@"FXBTG",@"customizedProfit":@"45.66",@"mq":@"0.74%",@"name":@"美原油",@"pid":@"00014969062218170007",@"margin":@"0.34",@"code":@"USOIL",@"reminderProfit":@"46.15"},@"sendType":@(2),@"title":@"行情提醒"};
-//    [self configRemindModelWithDic:user1];
-//    NSDictionary * user2=@{@"body":@"您的预付款比例为-1235.35%,接近100%爆仓线！入境或平仓,减免爆仓风险。",@"data":@{@"timeOutTxt":@"六小时内不会再次提醒"},@"sendType":@(7),@"title":@"仓位预警"};
-//    [self alertWarmingSheet:user2];
-//    NSDictionary * user3=@{@"body":@"流水号为:14969897325549801518的出金申请已成功，申请金额$30.00,手续$20.00费实际金额￥205.13，到账时间取决于银行",@"data":@{@"amountUSD":@(30.00),@"charge":@(20.00),@"factMoney":@(205.13),@"logNo":@"14969897325549801518",@"mark":@"通过",@"type":@(3)},@"sendType":@(6),@"title":@"出金状态提醒"};
-//    [self withdrawAlert:user3];
 }
 
 //初始化 主页TabBar -- 未显示过导航页，先显示导航页
@@ -224,15 +209,17 @@
     _remindView.hidden=NO;
     [AppKeyWindow bringSubviewToFront:_remindView];
 }
--(void)initDealMsgPop{
-    _dealView=[AppKeyWindow viewWithTag:999999];
+
+- (void)initDealMsgPop{
+    _dealView = [AppKeyWindow viewWithTag:999999];
     if (!_dealView) {
         _dealView=[[PopDealMsgV alloc]init];
         _dealView.tag=999999;
         [AppKeyWindow addSubview:_dealView];
     }
 }
--(void)showDealMsgPop{
+
+- (void)showDealMsgPop{
     if (!_dealView) {
         [self initDealMsgPop];
     }

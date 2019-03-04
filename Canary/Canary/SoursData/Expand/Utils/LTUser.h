@@ -57,6 +57,7 @@
 //用户信息
 #define kAvatar @"avatar"
 #define kNickName @"nickName"
+#define kUserId @"userId"
 #define kMobile @"mobile"
 #define kToken @"token"
 #define kLastMobile @"lastMobileNum"

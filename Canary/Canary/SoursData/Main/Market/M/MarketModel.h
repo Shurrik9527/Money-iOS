@@ -28,10 +28,10 @@
 
 @property (nonatomic,copy)NSString *entryOrders;
 @property (nonatomic,copy)NSString *id;
-@property (nonatomic,copy)NSString *quantityCommissionCharges;
+@property (nonatomic,assign)CGFloat quantityCommissionCharges;
 @property (nonatomic,assign)NSInteger quantityOne;
 @property (nonatomic,copy)NSString *quantityOvernightFee;
-@property (nonatomic,copy)NSString *quantityPriceFluctuation;
+@property (nonatomic,assign)CGFloat quantityPriceFluctuation;
 @property (nonatomic,assign)NSInteger quantityThree;
 @property (nonatomic,assign)NSInteger quantityTwo;
 @property (nonatomic,assign)NSInteger status;

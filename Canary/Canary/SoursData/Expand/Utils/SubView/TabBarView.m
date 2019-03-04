@@ -34,7 +34,7 @@
         // 导航栏栏目
         CGFloat x = 0;
         vw = frame.size.width / titles.count;
-        vh = frame.size.height;
+        vh = frame.size.height - kBottomBarHeight;
         UIView *line=[[UIView alloc]init];
         line.frame=CGRectMake(0, 0, Screen_width,0.5);
         line.backgroundColor=LTLineColor;
@@ -75,7 +75,7 @@
             
             // 文字
             UILabel *_l = [[UILabel alloc]
-                           initWithFrame:CGRectMake(0, self.h_-17, _bt.w_, 17)];
+                           initWithFrame:CGRectMake(0, self.h_-17-kBottomBarHeight, _bt.w_, 17)];
             [_l setText:[titles objectAtIndex:i]];
             _l.font = [UIFont systemFontOfSize:11];
             _l.textAlignment = NSTextAlignmentCenter;

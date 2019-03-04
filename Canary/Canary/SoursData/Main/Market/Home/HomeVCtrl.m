@@ -171,10 +171,10 @@
 
 #pragma mark - NavBar
 - (void)createNavBar {
-    [self navTitle:@""];
+    [self navTitle:@"掌上投"];
     
     UIImageView *titleIV = [[UIImageView alloc] init];
-    UIImage *img = [UIImage imageNamed:@"homeTitle"];
+    UIImage *img = [UIImage imageNamed:@""];
     if (kChangeImageColor) {
         img = [img changeColor:NavBarTitleCoror];
     }

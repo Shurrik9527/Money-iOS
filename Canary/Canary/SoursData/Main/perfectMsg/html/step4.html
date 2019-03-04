@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<meta name="apple-mobile-web-app-title" content="审核中">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#F5F5F5" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<meta name="keywords" content="审核中">
+		<meta name="description" content="审核中">
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>审核中</title>
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../css/perfectMsg.css" />
+		<script src="../js/adaptive-version2.js"></script>
+		<script>
+			window['adaptive'].desinWidth = 750;
+			window['adaptive'].baseFont = 20;
+			window['adaptive'].maxWidth = 750;
+			window['adaptive'].init();
+		</script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="container">
+				<div class="center">
+					<div class="submit_msg">
+						<h1>审核中</h1>
+						<p>我们将尽快审核</p>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/jquery-1.11.1.js"></script>
+		<script type="text/javascript" src="../js/bscroll.min.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				
+				//上下滑动回弹
+				var scroll = new BScroll('#wrapper',{
+					scrollY: true,
+					click: true,
+					bounce: true,
+					momentum: true
+				})
+				
+				
+
+			})
+
+			
+		</script>
+	</body>
+</html>

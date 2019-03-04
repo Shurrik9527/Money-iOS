@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<meta name="apple-mobile-web-app-title" content="完善信息">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#F5F5F5" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<meta name="keywords" content="完善信息">
+		<meta name="description" content="完善信息">
+		<meta name="format-detection" content="telephone=no,email=no" />
+		<title>完善信息</title>
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../css/perfectMsg.css" />
+		<script src="../js/adaptive-version2.js"></script>
+		<script>
+			window['adaptive'].desinWidth = 750;
+			window['adaptive'].baseFont = 20;
+			window['adaptive'].maxWidth = 750;
+			window['adaptive'].init();
+		</script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="container">
+				<div class="center">
+					<div class="head_msg">
+						<p>以下信息将用来验证您的身份，并帮助评估我们的产品对您对适用性和可持续性。您的信息将始终保密。</p>
+					</div>
+					<div class="main">
+						<h3>身份证证明</h3>
+						<div class="radio_tilte">阅读证明文件要求，<a class="radio_link" href="/">查看详情</a></div>
+						<div class="img_box">
+							<p>上传身份证正面</p>
+						</div>
+						<div class="img_box">
+							<p>上传身份证背面</p>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			<div class="next_btn2">
+				<a class="prev_btn" href="step1.html">上一步</a>
+				<a href="step3.html">下一步</a>
+			</div>
+
+		</div>
+		<script type="text/javascript" src="../js/jquery-1.11.1.js"></script>
+		<script type="text/javascript" src="../js/bscroll.min.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				
+				//上下滑动回弹
+				var scroll = new BScroll('#wrapper',{
+					scrollY: true,
+					click: true,
+					bounce: true,
+					momentum: true
+				})
+				
+				
+
+			})
+
+			
+		</script>
+	</body>
+</html>

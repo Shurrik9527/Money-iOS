@@ -53,7 +53,7 @@
     
     [self createTableViewWithHeaderAndFooter];
     self.tableView.backgroundColor = LTBgColor;
-    CGRect rect = CGRectMake(0, 64, self.view.w_, self.view.h_ - NavBarTop_Lit-LTAutoW(GainBtmViewH));
+    CGRect rect = CGRectMake(0, NavBarTop_Lit, self.view.w_, self.view.h_ - NavBarTop_Lit-LTAutoW(GainBtmViewH));
     self.tableView.frame = rect;
     
     [self createGainBtmView];

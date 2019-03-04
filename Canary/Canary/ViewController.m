@@ -59,9 +59,10 @@
             _tabTitles = [NSArray arrayWithObjects:@"首页", @"行情", @"我的", nil];
             _tabIcons = @[ @"0-0", @"1-0",  @"3-0" ];
         }
+        NSLog(@"=============== %f",kBottomBarHeight);
         // 底部导航栏
         self.footer =
-        [[TabBarView alloc] initWithFrame:CGRectMake(0, ScreenH_Lit - TabBarH_Lit,ScreenW_Lit, TabBarH_Lit)
+        [[TabBarView alloc] initWithFrame:CGRectMake(0, ScreenH_Lit - TabBarH_Lit - kBottomBarHeight,ScreenW_Lit, TabBarH_Lit + kBottomBarHeight)
                                    titles:_tabTitles
                                     Icons:_tabIcons
                                    target:self];
@@ -158,14 +159,14 @@
     NSInteger tag = button.tag;
 //    NSArray *vc = [self childViewControllers];
     
-//    if(tag == TabBarType_Deal) {
-//        if (![LTUser hideDeal]) {
-//            BOOL locHasLogin = [self checkLocHasLogin:@"登录后才能操作"];
-//            if (!locHasLogin) {
-//                return;
-//            }
-//        }
-//    }
+    if([self.tabTitles[tag] isEqualToString:@"交易"]) {
+        if (![LTUser hideDeal]) {
+            BOOL locHasLogin = [self checkLocHasLogin:@"登录后才能操作"];
+            if (!locHasLogin) {
+                return;
+            }
+        }
+    }
     [self selectTabBarType:tag];
 }
 

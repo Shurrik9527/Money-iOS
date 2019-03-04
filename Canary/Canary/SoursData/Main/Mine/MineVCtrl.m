@@ -26,7 +26,7 @@
 #import "TopUpVC.h"
 
 #define MeVCtrlDatas    @[\
-                                                @[@"一分钟了解汇大师"],\
+                                                @[@"一分钟了解掌上投"],\
                                                 @[@"关于我们"] \
                                          ]
 
@@ -51,7 +51,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.datas = [@[@"消息中心",@"推送设置",@"一分钟了解汇大师",@"版本检测",@"关于我们"] mutableCopy];
+        self.datas = [@[@"消息中心",@"推送设置",@"一分钟了解掌上投",@"版本检测",@"关于我们"] mutableCopy];
 
     }
     return self;
@@ -109,9 +109,14 @@
 }
 
 - (void)pushAuthCtrl {
-    AuthVC *vc = [[AuthVC alloc] init];
-//    vc.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushVC:vc];
+
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"step1" ofType:@"html" inDirectory:@"perfectMsg/html"];
+    
+    path = [NSString stringWithFormat:@"file://%@?userId=%@",path,[NSUserDefaults objFoKey:kUserId]];
+    NSLog(@"path === %@",path);
+    [self pushWeb:path title:@"实名认证"];
+
+    
 }
 
 #pragma mark - 请求
@@ -206,7 +211,7 @@
 - (void)configstateBarColor {
     UIColor *color = useNewYearTheme ? NavBarBgCoror0 : NavBarBgCoror ;
     self.stateBar = [[UIView alloc] init] ;
-    _stateBar.frame = CGRectMake(0, 0, ScreenW_Lit, 20);
+    _stateBar.frame = CGRectMake(0, 0, ScreenW_Lit, StateBarHeight);
     _stateBar.backgroundColor = color;
     [self.view addSubview:_stateBar];
 }
@@ -467,7 +472,7 @@
 - (void)configDatas {
     [self.datas removeAllObjects];
 //    self.datas = [NSMutableArray arrayWithArray:MeVCtrlDatas];
-    self.datas = [@[@"消息中心",@"一分钟了解汇大师",@"版本检测",@"关于我们"] mutableCopy];
+    self.datas = [@[@"消息中心",@"一分钟了解掌上投",@"版本检测",@"关于我们"] mutableCopy];
 }
 
 - (void)setUnReadMsgCount:(NSInteger)unReadMsgCount {
@@ -598,7 +603,7 @@ static CGFloat HeaderSectionH = 8;
     
     UMengEventWithParameter(page_me, @"name", txt);
     
-    if ([txt isEqualToString:@"一分钟了解汇大师"]) {
+    if ([txt isEqualToString:@"一分钟了解掌上投"]) {
         [self pushWeb:@"http://www.zhangstz.com/xsxt/zh-CN/index.html" title:txt];
         return;
     }

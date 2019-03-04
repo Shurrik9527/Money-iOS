@@ -47,9 +47,10 @@
 
 #define StatusBarH_Lit        ([UIApplication sharedApplication].statusBarFrame.size.height)
 #define NavBarH_Lit                 (44.0)
-#define NavBarTop_Lit               (64.0)
-#define TabBarH_Lit                     (50.0)
-#define NavAndTabBarH_Lit          (NavBarTop_Lit + TabBarH_Lit)
+#define NavBarTop_Lit               (iPhoneX || iPhoneXMax || iPhoneXR ? 88 : 64.0)
+#define TabBarH_Lit                  (50.0)
+#define kBottomBarHeight        (iPhoneX || iPhoneXMax || iPhoneXR  ? 34.0 : 0)
+#define NavAndTabBarH_Lit          (NavBarTop_Lit + TabBarH_Lit + kBottomBarHeight)
 
 //全屏幕的bounds
 #define ScreenBounds_Lit           [[UIScreen mainScreen] bounds]
@@ -142,7 +143,15 @@
 #define iPhone6Plus \
     ([UIScreen instancesRespondToSelector:@selector(currentMode)]   \
     ? CGSizeEqualToSize(CGSizeMake(1242, 2208), [[UIScreen mainScreen] currentMode].size) : NO)
-
+#define iPhoneX \
+([UIScreen instancesRespondToSelector:@selector(currentMode)]   \
+? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
+#define iPhoneXMax \
+([UIScreen instancesRespondToSelector:@selector(currentMode)]   \
+? CGSizeEqualToSize(CGSizeMake(1242, 2688), [[UIScreen mainScreen] currentMode].size) : NO)
+#define iPhoneXR \
+([UIScreen instancesRespondToSelector:@selector(currentMode)]   \
+? CGSizeEqualToSize(CGSizeMake(828, 1792), [[UIScreen mainScreen] currentMode].size) : NO)
 
 #define IOS10_OR_LATER (iOSSystemVersion >= 10.0)
 #define IOS9_OR_LATER (iOSSystemVersion >= 9.0)
