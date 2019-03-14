@@ -1,4 +1,5 @@
 PODS:
+  - AlipaySDK-iOS (15.5.9)
   - FTCoreText (1.0.1)
   - HappyDNS (0.3.12)
   - libqrencode (3.4.2)
@@ -13,6 +14,9 @@ PODS:
   - PLPlayerKit/precompiled (2.2.4):
     - HappyDNS (~> 0.3.10)
     - pili-librtmp (= 1.0.4)
+  - RongCloudIM/IMKit (2.8.32):
+    - RongCloudIM/IMLib
+  - RongCloudIM/IMLib (2.8.32)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
@@ -21,12 +25,15 @@ PODS:
   - XLForm (3.3.0)
 
 DEPENDENCIES:
+  - AlipaySDK-iOS
   - FTCoreText (= 1.0.1)
   - libqrencode (= 3.4.2)
   - MBProgressHUD (~> 1.0.0)
   - MJExtension (= 3.0.9)
   - NIMSDK
   - PLPlayerKit (~> 2.2.2)
+  - RongCloudIM/IMKit (~> 2.8.3)
+  - RongCloudIM/IMLib (~> 2.8.3)
   - SDWebImage (= 3.7.3)
   - SocketRocket
   - Toast (~> 2.4)
@@ -34,6 +41,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - AlipaySDK-iOS
     - FTCoreText
     - HappyDNS
     - libqrencode
@@ -42,12 +50,14 @@ SPEC REPOS:
     - NIMSDK
     - pili-librtmp
     - PLPlayerKit
+    - RongCloudIM
     - SDWebImage
     - SocketRocket
     - Toast
     - XLForm
 
 SPEC CHECKSUMS:
+  AlipaySDK-iOS: 1c5283b30977a24acecc0114662697f7dc78f618
   FTCoreText: 7bc3eb236f5eee4bcd33486d693376c04b08a3d4
   HappyDNS: 691a3041128055d09866f86e6e9ca90f24da1f18
   libqrencode: 43dc34b89af83ea4b07c409cd8e09c87aa3a1c9f
@@ -56,11 +66,12 @@ SPEC CHECKSUMS:
   NIMSDK: 8cf6b0e2d71cbf8be8e1cc697e3baa5cf5b683f7
   pili-librtmp: bc768bc3971edad732fd5e66f0ee991fa1a0a257
   PLPlayerKit: 30e419fa90e84df34922e6dd5d5833d7e4348bf4
+  RongCloudIM: 48bfc2fcb8d7cae8ce1e19cb5fb26d6d90616375
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   Toast: 0773b8fc0e97352ca6054517bec7ebdd4110029d
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
 
-PODFILE CHECKSUM: cc8452663d27cce8cddf446074ac69acc06895e1
+PODFILE CHECKSUM: 8e313598521113a76b4091ae9310211357914d99
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.1

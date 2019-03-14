@@ -13,6 +13,9 @@ target 'Canary' do
     pod 'libqrencode', '3.4.2'
     pod 'NIMSDK'
     pod 'XLForm'
+    pod 'AlipaySDK-iOS'
     pod 'SocketRocket'
+    pod 'RongCloudIM/IMLib', '~> 2.8.3'
+    pod 'RongCloudIM/IMKit', '~> 2.8.3'
     
 end

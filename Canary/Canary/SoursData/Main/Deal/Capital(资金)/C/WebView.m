@@ -44,7 +44,7 @@
     {
         _urlString =[NSString stringWithFormat:@"%@%@",@"http://uc.moyacs.com/real_app_v2.html?token=",[NSUserDefaults objFoKey:kToken]];
     }
-    UIWebView* webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, Screen_width, Screen_height - 64)];
+    UIWebView* webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, NavBarTop_Lit, Screen_width, Screen_height - NavBarTop_Lit)];
     webView.delegate = self;
     for (id subview in webView.subviews)
         if ([[subview class] isSubclassOfClass: [UIScrollView class]])

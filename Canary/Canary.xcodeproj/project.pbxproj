@@ -80,12 +80,30 @@
 		18B3067A20A05CEC00B5FD52 /* NewBuyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B3067920A05CEB00B5FD52 /* NewBuyView.m */; };
 		18FADEF520A879A8001E4853 /* CrudeList+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FADEF320A879A8001E4853 /* CrudeList+CoreDataClass.m */; };
 		18FADEF620A879A8001E4853 /* CrudeList+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FADEF420A879A8001E4853 /* CrudeList+CoreDataProperties.m */; };
+		19BD941F2239E78F007CF1AA /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD941E2239E78F007CF1AA /* SafariServices.framework */; };
+		19BD94212239E798007CF1AA /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD94202239E797007CF1AA /* Photos.framework */; };
+		19BD94232239E7A2007CF1AA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD94222239E7A1007CF1AA /* UIKit.framework */; };
+		19BD94252239E7A9007CF1AA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD94242239E7A9007CF1AA /* SystemConfiguration.framework */; };
+		19BD94272239E7B1007CF1AA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD94262239E7B0007CF1AA /* QuartzCore.framework */; };
+		19BD94292239E7B7007CF1AA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD94282239E7B7007CF1AA /* OpenGLES.framework */; };
+		19BD942B2239E7BF007CF1AA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD942A2239E7BE007CF1AA /* MapKit.framework */; };
+		19BD942D2239E7C9007CF1AA /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD942C2239E7C9007CF1AA /* libz.tbd */; };
+		19BD942F2239E7D3007CF1AA /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD942E2239E7D3007CF1AA /* libxml2.tbd */; };
+		19BD94312239E7E3007CF1AA /* libc++abi.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD94302239E7E3007CF1AA /* libc++abi.tbd */; };
+		19BD94332239E806007CF1AA /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD94322239E806007CF1AA /* CoreVideo.framework */; };
+		19BD94352239E832007CF1AA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD94342239E832007CF1AA /* CoreGraphics.framework */; };
+		19BD94372239E839007CF1AA /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD94362239E839007CF1AA /* CoreAudio.framework */; };
+		19BD94392239E840007CF1AA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD94382239E83F007CF1AA /* CFNetwork.framework */; };
+		19BD943B2239E845007CF1AA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD943A2239E845007CF1AA /* AVFoundation.framework */; };
+		19BD943D2239E84C007CF1AA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD943C2239E84C007CF1AA /* AudioToolbox.framework */; };
+		19BD943F2239E853007CF1AA /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19BD943E2239E853007CF1AA /* AssetsLibrary.framework */; };
+		19BD94422239E8B2007CF1AA /* RechargeWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 19BD94402239E8B2007CF1AA /* RechargeWebView.m */; };
 		27B3CA3AB9B6F3077BCCED82 /* libPods-Canary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C87CA5CDC8B297401DD116D4 /* libPods-Canary.a */; };
 		9D0C910D1EBC2B50004AE4EA /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C910C1EBC2B50004AE4EA /* libsqlite3.tbd */; };
 		9D0C910F1EBC2B5F004AE4EA /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C910E1EBC2B5F004AE4EA /* libc++.tbd */; };
 		9D0C91111EBC2B68004AE4EA /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C91101EBC2B68004AE4EA /* CoreTelephony.framework */; };
 		9D0C91131EBC2B6F004AE4EA /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C91121EBC2B6F004AE4EA /* JavaScriptCore.framework */; };
-		9D0C91151EBC2B7E004AE4EA /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C91141EBC2B7E004AE4EA /* UserNotifications.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		9D0C91151EBC2B7E004AE4EA /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C91141EBC2B7E004AE4EA /* UserNotifications.framework */; };
 		9D0C91191EBC2B99004AE4EA /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C91181EBC2B99004AE4EA /* CoreMedia.framework */; };
 		9D0C911B1EBC2BA4004AE4EA /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C911A1EBC2BA4004AE4EA /* VideoToolbox.framework */; };
 		9D0C911D1EBC2BB7004AE4EA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C911C1EBC2BB7004AE4EA /* CoreLocation.framework */; };
@@ -680,6 +698,25 @@
 		18FADEF220A879A8001E4853 /* CrudeList+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CrudeList+CoreDataClass.h"; sourceTree = "<group>"; };
 		18FADEF320A879A8001E4853 /* CrudeList+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CrudeList+CoreDataClass.m"; sourceTree = "<group>"; };
 		18FADEF420A879A8001E4853 /* CrudeList+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CrudeList+CoreDataProperties.m"; sourceTree = "<group>"; };
+		19BD941E2239E78F007CF1AA /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		19BD94202239E797007CF1AA /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		19BD94222239E7A1007CF1AA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		19BD94242239E7A9007CF1AA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		19BD94262239E7B0007CF1AA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		19BD94282239E7B7007CF1AA /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		19BD942A2239E7BE007CF1AA /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		19BD942C2239E7C9007CF1AA /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		19BD942E2239E7D3007CF1AA /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		19BD94302239E7E3007CF1AA /* libc++abi.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++abi.tbd"; path = "usr/lib/libc++abi.tbd"; sourceTree = SDKROOT; };
+		19BD94322239E806007CF1AA /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		19BD94342239E832007CF1AA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		19BD94362239E839007CF1AA /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		19BD94382239E83F007CF1AA /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		19BD943A2239E845007CF1AA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		19BD943C2239E84C007CF1AA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		19BD943E2239E853007CF1AA /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		19BD94402239E8B2007CF1AA /* RechargeWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RechargeWebView.m; sourceTree = "<group>"; };
+		19BD94412239E8B2007CF1AA /* RechargeWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RechargeWebView.h; sourceTree = "<group>"; };
 		5C1D92D1416696AE5956E4A5 /* Pods-Canary.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Canary.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Canary/Pods-Canary.debug.xcconfig"; sourceTree = "<group>"; };
 		9D0C910C1EBC2B50004AE4EA /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		9D0C910E1EBC2B5F004AE4EA /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -1611,16 +1648,33 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05CC7CA621F4A1A000DEF48E /* Security.framework in Frameworks */,
-				9D0C911F1EBC2BBE004AE4EA /* ImageIO.framework in Frameworks */,
-				9D0C911D1EBC2BB7004AE4EA /* CoreLocation.framework in Frameworks */,
-				9D0C911B1EBC2BA4004AE4EA /* VideoToolbox.framework in Frameworks */,
-				9D0C91191EBC2B99004AE4EA /* CoreMedia.framework in Frameworks */,
 				9D0C91151EBC2B7E004AE4EA /* UserNotifications.framework in Frameworks */,
+				9D0C911B1EBC2BA4004AE4EA /* VideoToolbox.framework in Frameworks */,
+				19BD943F2239E853007CF1AA /* AssetsLibrary.framework in Frameworks */,
+				19BD943D2239E84C007CF1AA /* AudioToolbox.framework in Frameworks */,
+				19BD943B2239E845007CF1AA /* AVFoundation.framework in Frameworks */,
+				19BD94392239E840007CF1AA /* CFNetwork.framework in Frameworks */,
+				19BD94372239E839007CF1AA /* CoreAudio.framework in Frameworks */,
+				19BD94352239E832007CF1AA /* CoreGraphics.framework in Frameworks */,
+				9D0C911D1EBC2BB7004AE4EA /* CoreLocation.framework in Frameworks */,
+				9D0C91191EBC2B99004AE4EA /* CoreMedia.framework in Frameworks */,
+				9D0C91111EBC2B68004AE4EA /* CoreTelephony.framework in Frameworks */,
+				19BD94332239E806007CF1AA /* CoreVideo.framework in Frameworks */,
+				9D0C911F1EBC2BBE004AE4EA /* ImageIO.framework in Frameworks */,
+				9D0C910F1EBC2B5F004AE4EA /* libc++.tbd in Frameworks */,
+				19BD94312239E7E3007CF1AA /* libc++abi.tbd in Frameworks */,
+				19BD942F2239E7D3007CF1AA /* libxml2.tbd in Frameworks */,
+				19BD942D2239E7C9007CF1AA /* libz.tbd in Frameworks */,
+				19BD942B2239E7BF007CF1AA /* MapKit.framework in Frameworks */,
+				19BD94292239E7B7007CF1AA /* OpenGLES.framework in Frameworks */,
+				19BD94272239E7B1007CF1AA /* QuartzCore.framework in Frameworks */,
+				19BD94252239E7A9007CF1AA /* SystemConfiguration.framework in Frameworks */,
+				19BD94232239E7A2007CF1AA /* UIKit.framework in Frameworks */,
+				19BD94212239E798007CF1AA /* Photos.framework in Frameworks */,
+				19BD941F2239E78F007CF1AA /* SafariServices.framework in Frameworks */,
+				05CC7CA621F4A1A000DEF48E /* Security.framework in Frameworks */,
 				9D0C91131EBC2B6F004AE4EA /* JavaScriptCore.framework in Frameworks */,
 				9D91DE9A1EC041F700C0953E /* libGtExtensionSdk-1.2.0.a in Frameworks */,
-				9D0C91111EBC2B68004AE4EA /* CoreTelephony.framework in Frameworks */,
-				9D0C910F1EBC2B5F004AE4EA /* libc++.tbd in Frameworks */,
 				9D0C910D1EBC2B50004AE4EA /* libsqlite3.tbd in Frameworks */,
 				27B3CA3AB9B6F3077BCCED82 /* libPods-Canary.a in Frameworks */,
 				9D91DEB21EC041F700C0953E /* UMMobClick.framework in Frameworks */,
@@ -1859,6 +1913,8 @@
 		18B149522086DE2000E47C7E /* C */ = {
 			isa = PBXGroup;
 			children = (
+				19BD94412239E8B2007CF1AA /* RechargeWebView.h */,
+				19BD94402239E8B2007CF1AA /* RechargeWebView.m */,
 				18B1493F2085A11000E47C7E /* CapitalVC.h */,
 				18B149402085A11000E47C7E /* CapitalVC.m */,
 				18B1495F2086F0A800E47C7E /* FundListVC.h */,
@@ -1897,6 +1953,23 @@
 		581176851A913EC29C62137F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				19BD943E2239E853007CF1AA /* AssetsLibrary.framework */,
+				19BD943C2239E84C007CF1AA /* AudioToolbox.framework */,
+				19BD943A2239E845007CF1AA /* AVFoundation.framework */,
+				19BD94382239E83F007CF1AA /* CFNetwork.framework */,
+				19BD94362239E839007CF1AA /* CoreAudio.framework */,
+				19BD94342239E832007CF1AA /* CoreGraphics.framework */,
+				19BD94322239E806007CF1AA /* CoreVideo.framework */,
+				19BD94302239E7E3007CF1AA /* libc++abi.tbd */,
+				19BD942E2239E7D3007CF1AA /* libxml2.tbd */,
+				19BD942C2239E7C9007CF1AA /* libz.tbd */,
+				19BD942A2239E7BE007CF1AA /* MapKit.framework */,
+				19BD94282239E7B7007CF1AA /* OpenGLES.framework */,
+				19BD94262239E7B0007CF1AA /* QuartzCore.framework */,
+				19BD94242239E7A9007CF1AA /* SystemConfiguration.framework */,
+				19BD94222239E7A1007CF1AA /* UIKit.framework */,
+				19BD94202239E797007CF1AA /* Photos.framework */,
+				19BD941E2239E78F007CF1AA /* SafariServices.framework */,
 				05CC7CA521F4A1A000DEF48E /* Security.framework */,
 				9D0C911E1EBC2BBE004AE4EA /* ImageIO.framework */,
 				9D0C911C1EBC2BB7004AE4EA /* CoreLocation.framework */,
@@ -4128,20 +4201,32 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Canary/Pods-Canary-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Canary/Pods-Canary-resources.sh",
+				"${PODS_ROOT}/AlipaySDK-iOS/AlipaySDK.bundle",
 				"${PODS_ROOT}/NIMSDK/NIMAVChat/Resources/NMCVideoFilter.bundle",
+				"${PODS_ROOT}/RongCloudIM/RongCloudIM/RongCloud.bundle",
+				"${PODS_ROOT}/RongCloudIM/RongCloudIM/en.lproj",
+				"${PODS_ROOT}/RongCloudIM/RongCloudIM/zh-Hans.lproj",
+				"${PODS_ROOT}/RongCloudIM/RongCloudIM/Emoji.plist",
+				"${PODS_ROOT}/RongCloudIM/RongCloudIM/RCConfig.plist",
 				"${PODS_ROOT}/XLForm/XLForm/XLForm.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AlipaySDK.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/NMCVideoFilter.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RongCloud.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/en.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/zh-Hans.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Emoji.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCConfig.plist",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/XLForm.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Canary/Pods-Canary-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Canary/Pods-Canary-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9C23D7FE72F11B992ABDF70A /* [CP] Embed Pods Frameworks */ = {
@@ -4152,7 +4237,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Canary/Pods-Canary-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Canary/Pods-Canary-frameworks.sh",
 				"${PODS_ROOT}/NIMSDK/NIMSDK/NIMSDK.framework",
 				"${PODS_ROOT}/NIMSDK/NIMAVChat/NIMAVChat.framework",
 				"${PODS_ROOT}/NIMSDK/NIMAVChat/NMC.framework",
@@ -4167,7 +4252,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Canary/Pods-Canary-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Canary/Pods-Canary-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -4353,6 +4438,7 @@
 				9DF03E641EE117A800C987CE /* MoneyRecordDeatilVCtrl.m in Sources */,
 				A146701E20A68976009DDEB5 /* SelfList+CoreDataProperties.m in Sources */,
 				9D91E63B1ECAD5F700C0953E /* NTESVideoChatViewController.m in Sources */,
+				19BD94422239E8B2007CF1AA /* RechargeWebView.m in Sources */,
 				F720C5681EDE60C100D2C73B /* MyRemind.m in Sources */,
 				9D91E01B1EC481B200C0953E /* MineMsgCenterVC.m in Sources */,
 				9D0C98271EBC44E5004AE4EA /* NSFileManager+LT.m in Sources */,

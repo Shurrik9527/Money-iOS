@@ -33,7 +33,7 @@
 }
 -(void)creatTableView
 {
-    UIView * viiew1 =[[UIView alloc]initWithFrame:CGRectMake(0, 64, Screen_width, 140)];
+    UIView * viiew1 =[[UIView alloc]initWithFrame:CGRectMake(0, NavBarTop_Lit, Screen_width, 140)];
     viiew1.backgroundColor =[UIColor whiteColor];
     [self.view addSubview:viiew1];
     

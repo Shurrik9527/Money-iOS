@@ -1,1 +1,0 @@
-../../../../NIMSDK/NIMAVChat/NMC.framework/Headers/NMCGlobalManager.h
